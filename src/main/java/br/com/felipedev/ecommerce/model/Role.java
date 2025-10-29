@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "roles")
 @Getter
@@ -23,6 +26,9 @@ public class Role implements GrantedAuthority {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = true)
     private RoleType role;
+
+//    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+//    private List<User> users = new ArrayList<>();
 
     @Override
     public String getAuthority() {
