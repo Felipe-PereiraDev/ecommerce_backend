@@ -8,6 +8,8 @@ import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "brands")
@@ -26,4 +28,12 @@ public class Brand implements Serializable {
 
     @Column(name = "description", length = 50, unique = true, nullable = false)
     private String description;
+
+    @OneToMany(mappedBy = "brand")
+    private List<Product> products = new ArrayList<>();
+
+    public Brand(Long id, String description) {
+        this.id = id;
+        this.description = description;
+    }
 }
