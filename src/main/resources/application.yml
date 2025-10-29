@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: ecommerce
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ecommerce
+    username: admin
+    password: admin
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate.ddl-auto: update
+    show-sql: true
+
+#    defer-datasource-initialization: true
+server:
+    error.include-message: always
+    error.include-binding-errors: always
+  
+#  jwt.private.key=classpath:privatekey.pem
+#  jwt.public.key=classpath:publickey.pem
