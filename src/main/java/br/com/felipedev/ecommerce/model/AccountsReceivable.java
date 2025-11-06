@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "accounts_receivable")
+@Table(name = "accounts_receivable", uniqueConstraints = @UniqueConstraint(name = "ar_sale_purchase_uk", columnNames = {"sale_purchase_id"}))
 @Getter
 @Setter
 @AllArgsConstructor
@@ -41,5 +41,10 @@ public class AccountsReceivable {
     @ManyToOne
     @JoinColumn(name = "person_id", foreignKey = @ForeignKey(name = "person_fk", value = ConstraintMode.CONSTRAINT))
     private Person person;
+
+    @OneToOne
+    @JoinColumn(name = "sale_purchase_id", foreignKey = @ForeignKey(name = "sale_purchase_fk", value = ConstraintMode.CONSTRAINT))
+    private SalePurchase salePurchase;
+
 
 }
