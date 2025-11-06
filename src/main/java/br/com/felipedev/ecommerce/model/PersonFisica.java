@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @DiscriminatorValue("FISICA")
 public class PersonFisica extends Person{
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String cpf;
     @Column(nullable = false)
     private LocalDateTime dateOfBirth;

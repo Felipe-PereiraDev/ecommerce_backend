@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "categories")
+@Table(name = "categories", uniqueConstraints = @UniqueConstraint(name = "uk_categories_description", columnNames = {"description"}))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,7 +26,7 @@ public class Category implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_seq")
     private Long id;
 
-    @Column(name = "description", length = 50, unique = true, nullable = false)
+    @Column(name = "description", length = 50, nullable = false)
     private String description;
 
     @OneToMany(mappedBy = "category")

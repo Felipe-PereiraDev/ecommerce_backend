@@ -55,11 +55,11 @@ public class Product {
     public String youtubeLink;
 
     @ManyToOne
-    @JoinColumn(name = "brand_id", nullable = false)
+    @JoinColumn(name = "brand_id", nullable = false, foreignKey = @ForeignKey(name = "fk_brand", value = ConstraintMode.CONSTRAINT))
     public Brand brand;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "category_id", nullable = false, foreignKey = @ForeignKey(name = "fk_category", value = ConstraintMode.CONSTRAINT))
     public Category category;
 
     public int clickCount;

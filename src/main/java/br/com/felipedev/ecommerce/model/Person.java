@@ -9,7 +9,12 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Table(name = "people")
+@Table(name = "people", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_email", columnNames = {"email"}),
+        @UniqueConstraint(name = "uk_phone", columnNames = {"phone"}),
+        @UniqueConstraint(name = "uk_cnpj", columnNames = {"cnpj"}),
+        @UniqueConstraint(name = "uk_cpf", columnNames = {"cpf"})
+})
 @Getter
 @Setter
 @AllArgsConstructor
@@ -27,7 +32,7 @@ public class Person {
     @Column(name = "email", nullable = false, length = 100)
     private String email;
 
-    @Column(name = "phone", nullable = false, unique = true)
+    @Column(name = "phone", nullable = false)
     private String phone;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(name = "uk_username", columnNames = {"username"}))
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -25,8 +25,10 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 30, nullable = false)
     private String username;
 
+    @Column(length = 50, nullable = false)
     private String password;
 
     @Temporal(TemporalType.DATE)
@@ -45,13 +47,13 @@ public class User implements UserDetails {
                     name = "user_id",
                     referencedColumnName = "id",
                     table = "users",
-                    foreignKey = @ForeignKey(name = "user_fk", value = ConstraintMode.CONSTRAINT)
+                    foreignKey = @ForeignKey(name = "fk_user", value = ConstraintMode.CONSTRAINT)
             ),
             inverseJoinColumns = @JoinColumn(
                     name = "role_id",
                     referencedColumnName = "id",
                     table = "roles",
-                    foreignKey = @ForeignKey(name = "role_fk", value = ConstraintMode.CONSTRAINT)
+                    foreignKey = @ForeignKey(name = "fk_role", value = ConstraintMode.CONSTRAINT)
             )
     )
     private List<Role> roles = new ArrayList<>();

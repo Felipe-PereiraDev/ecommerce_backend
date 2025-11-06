@@ -1,6 +1,7 @@
 package br.com.felipedev.ecommerce.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.Constraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "brands")
+@Table(name = "brands", uniqueConstraints = @UniqueConstraint(name = "uk_brands_description", columnNames = {"description"}))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,7 +27,7 @@ public class Brand implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "brand_seq")
     private Long id;
 
-    @Column(name = "description", length = 50, unique = true, nullable = false)
+    @Column(name = "description", length = 50, nullable = false)
     private String description;
 
     @OneToMany(mappedBy = "brand")
