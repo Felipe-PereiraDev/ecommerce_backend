@@ -14,8 +14,8 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "nota_fiscal_compra", uniqueConstraints = {
-        @UniqueConstraint(name = "number_uk", columnNames = {"number"}),
-        @UniqueConstraint(name = "accounts_payable_uk", columnNames = {"accounts_payable_id"})
+        @UniqueConstraint(name = "nfc_number_uk", columnNames = {"number"}),
+        @UniqueConstraint(name = "nfc_accounts_payable_uk", columnNames = {"accounts_payable_id"})
 })
 @Getter
 @Setter
