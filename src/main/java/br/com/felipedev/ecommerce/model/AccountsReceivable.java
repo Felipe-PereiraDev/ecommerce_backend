@@ -30,7 +30,6 @@ public class AccountsReceivable {
     private LocalDate dueDate;
 
     @Column(name = "payment_date", nullable = false)
-    @Temporal(TemporalType.DATE)
     private LocalDate paymentDate;
 
     @Column(name = "total_amount", precision = 10, scale = 2, nullable = false)
@@ -40,7 +39,7 @@ public class AccountsReceivable {
     private BigDecimal discountAmount;
 
     @ManyToOne
-    @JoinColumn(name = "person_id", foreignKey = @ForeignKey(name = "fk_person", value = ConstraintMode.CONSTRAINT))
+    @JoinColumn(name = "person_id", foreignKey = @ForeignKey(name = "person_fk", value = ConstraintMode.CONSTRAINT))
     private Person person;
 
 }

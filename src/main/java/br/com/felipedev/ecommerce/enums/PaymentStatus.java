@@ -4,7 +4,10 @@ public enum PaymentStatus {
     PENDING("Pendente"),
     PAID("Pago"),
     OVERDUE("Vencido"),
-    CANCELLED("Cancelado");
+    CANCELLED("Cancelado"),
+    NEGOTIATED("Renegociado"),
+    OPEN("Aberto"),
+    SETTLED("Quitado");
 
     private String description;
 

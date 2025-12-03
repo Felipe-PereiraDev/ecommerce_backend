@@ -9,7 +9,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 @Entity
-@Table(name = "roles", uniqueConstraints = @UniqueConstraint(name = "uk_role", columnNames = {"role"}))
+@Table(name = "roles", uniqueConstraints = @UniqueConstraint(name = "role_uk", columnNames = {"role"}))
 @Getter
 @Setter
 @AllArgsConstructor

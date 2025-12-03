@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-//@Table(name = "products", uniqueConstraints = {@UniqueConstraint(columnNames = {"seller_id ", "name"})})
+//@Table(name = "products", uniqueConstraIntegers = {@UniqueConstraInteger(columnNames = {"seller_id ", "name"})})
 @Getter
 @Setter
 @AllArgsConstructor
@@ -20,50 +20,53 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    private Long id;
 
     @Column(name = "name", length = 100)
-    public String name;
+    private String name;
 
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
-    public BigDecimal price;
+    private BigDecimal price;
 
     @Column(name = "unit_type", length = 50)
-    public String unitType;
+    private String unitType;
 
-    @Column(name = "description", length = 2000)
-    public String description;
+    @Column(name = "description", columnDefinition = "text", length = 2000)
+    private String description;
 
-    public double weight;
+    @Column(nullable = false)
+    private Boolean active = true;
 
-    public double width;
+    private Double weight;
 
-    public double height;
+    private Double width;
 
-    public double depth;
+    private Double height;
+
+    private Double depth;
 
     @Column(name = "stock_quantity", nullable = false)
-    public int stockQuantity;
+    private Integer stockQuantity;
 
     @Column(name = "stock_alert_quantity")
-    public int stockAlertQuantity;
+    private Integer stockAlertQuantity = 0;
 
     @Column(name = "stock_alert_enabled")
-    public boolean stockAlertEnabled;
+    private Boolean stockAlertEnabled = false;
 
     @Column(name = "youtube_link", length = 1000)
-    public String youtubeLink;
+    private String youtubeLink;
 
     @ManyToOne
-    @JoinColumn(name = "brand_id", nullable = false, foreignKey = @ForeignKey(name = "fk_brand", value = ConstraintMode.CONSTRAINT))
-    public Brand brand;
+    @JoinColumn(name = "brand_id", nullable = false, foreignKey = @ForeignKey(name = "brand_fk", value = ConstraintMode.CONSTRAINT))
+    private Brand brand;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false, foreignKey = @ForeignKey(name = "fk_category", value = ConstraintMode.CONSTRAINT))
-    public Category category;
+    @JoinColumn(name = "category_id", nullable = false, foreignKey = @ForeignKey(name = "category_fk", value = ConstraintMode.CONSTRAINT))
+    private Category category;
 
-    public int clickCount;
+    private Integer clickCount = 0;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<ProductImage> images = new ArrayList<>();
+//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+//    List<ProductImage> images = new ArrayList<>();
 }

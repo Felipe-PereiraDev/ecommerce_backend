@@ -1,5 +1,6 @@
 package br.com.felipedev.ecommerce.controller;
 
+import br.com.felipedev.ecommerce.controller.docs.CategoryControllerDocs;
 import br.com.felipedev.ecommerce.dto.category.CategoryRequestDTO;
 import br.com.felipedev.ecommerce.dto.category.CategoryResponseDTO;
 import br.com.felipedev.ecommerce.service.CategoryService;
@@ -12,12 +13,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/categories")
-public class CategoryController {
+public class CategoryController implements CategoryControllerDocs {
     @Autowired
     private CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<CategoryResponseDTO> createBrand(@RequestBody @Validated CategoryRequestDTO request) {
+    public ResponseEntity<CategoryResponseDTO> createCategory(@RequestBody @Validated CategoryRequestDTO request) {
         return ResponseEntity.ok(categoryService.create(request));
     }
 
@@ -32,7 +33,7 @@ public class CategoryController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<CategoryResponseDTO> updateDescription(@PathVariable("id") Long id) {
+    public ResponseEntity<CategoryResponseDTO> deleteById(@PathVariable("id") Long id) {
         categoryService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

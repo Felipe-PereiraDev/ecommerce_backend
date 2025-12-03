@@ -25,8 +25,8 @@ public class ProductImage {
     @Column(nullable = false, columnDefinition = "TEXT")
     public String thumbnailImage;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false, foreignKey = @ForeignKey(name = "fk_product", value = ConstraintMode.CONSTRAINT))
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_id", nullable = false, foreignKey = @ForeignKey(name = "product_fk", value = ConstraintMode.CONSTRAINT))
     public Product product;
 
 }

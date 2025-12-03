@@ -1,9 +1,8 @@
 package br.com.felipedev.ecommerce.controller;
 
+import br.com.felipedev.ecommerce.controller.docs.BrandControllerDocs;
 import br.com.felipedev.ecommerce.dto.brand.BrandRequestDTO;
 import br.com.felipedev.ecommerce.dto.brand.BrandResponseDTO;
-import br.com.felipedev.ecommerce.model.Brand;
-import br.com.felipedev.ecommerce.repository.BrandRepository;
 import br.com.felipedev.ecommerce.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/brands")
-public class BrandController {
+public class BrandController implements BrandControllerDocs {
 
     @Autowired
     private BrandService brandService;
@@ -35,7 +34,7 @@ public class BrandController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<BrandResponseDTO> updateDescription(@PathVariable("id") Long id) {
+    public ResponseEntity<BrandResponseDTO> deleteById(@PathVariable("id") Long id) {
         brandService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

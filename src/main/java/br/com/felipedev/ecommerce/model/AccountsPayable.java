@@ -1,5 +1,6 @@
 package br.com.felipedev.ecommerce.model;
 
+import br.com.felipedev.ecommerce.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,27 +30,29 @@ public class AccountsPayable {
     private BigDecimal discountAmount;
 
     @Column(name = "due_date", nullable = false)
-    @Temporal(TemporalType.DATE)
     private LocalDate dueDate;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus status;
+
     @Column(name = "payment_date", nullable = false)
-    @Temporal(TemporalType.DATE)
     private LocalDate paymentDate;
 
     @ManyToOne
-    @JoinColumn(name = "person_id", foreignKey = @ForeignKey(name = "fk_person", value = ConstraintMode.CONSTRAINT), nullable = false)
+    @JoinColumn(name = "person_id", foreignKey = @ForeignKey(name = "person_fk", value = ConstraintMode.CONSTRAINT), nullable = false)
     private Person person;
 
     @ManyToOne
-    @JoinColumn(name = "supplier_id", foreignKey = @ForeignKey(name = "fk_supplier", value = ConstraintMode.CONSTRAINT), nullable = false)
+    @JoinColumn(name = "supplier_id", foreignKey = @ForeignKey(name = "supplier_fk", value = ConstraintMode.CONSTRAINT), nullable = false)
     private Person supplier;
 
     @ManyToOne
-    @JoinColumn(name = "address_id", nullable = false, foreignKey = @ForeignKey(name = "fk_address", value = ConstraintMode.CONSTRAINT))
+    @JoinColumn(name = "address_id", nullable = false, foreignKey = @ForeignKey(name = "address_fk", value = ConstraintMode.CONSTRAINT))
     private Address address;
 
     @ManyToOne
-    @JoinColumn(name = "payment_method_id", foreignKey = @ForeignKey(name = "fk_payment_method", value = ConstraintMode.CONSTRAINT), nullable = false)
+    @JoinColumn(name = "payment_method_id", foreignKey = @ForeignKey(name = "payment_method_fk", value = ConstraintMode.CONSTRAINT), nullable = false)
     private PaymentMethod paymentMethod;
 
 }

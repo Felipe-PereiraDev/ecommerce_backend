@@ -10,10 +10,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "people", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_email", columnNames = {"email"}),
-        @UniqueConstraint(name = "uk_phone", columnNames = {"phone"}),
-        @UniqueConstraint(name = "uk_cnpj", columnNames = {"cnpj"}),
-        @UniqueConstraint(name = "uk_cpf", columnNames = {"cpf"})
+        @UniqueConstraint(name = "email_uk", columnNames = {"email"}),
+        @UniqueConstraint(name = "phone_uk", columnNames = {"phone"}),
+        @UniqueConstraint(name = "cnpj_uk", columnNames = {"cnpj"}),
+        @UniqueConstraint(name = "cpf_uk", columnNames = {"cpf"})
 })
 @Getter
 @Setter

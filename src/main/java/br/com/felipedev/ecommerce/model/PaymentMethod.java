@@ -9,7 +9,7 @@ import lombok.*;
 @Table(
         name = "payment_methods",
         uniqueConstraints = @UniqueConstraint(
-                name = "uk_payment_type",
+                name = "payment_type_uk",
                 columnNames = {"payment_type"}
         )
 )

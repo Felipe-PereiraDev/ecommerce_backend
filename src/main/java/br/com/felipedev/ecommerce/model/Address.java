@@ -27,7 +27,7 @@ public class Address {
     public String city;
 
     @ManyToOne
-    @JoinColumn(name = "person_id", nullable = false, foreignKey = @ForeignKey(name = "fk_person"))
+    @JoinColumn(name = "person_id", nullable = false, foreignKey = @ForeignKey(name = "person_fk"))
     public Person person;
 
     @Enumerated(EnumType.STRING)
