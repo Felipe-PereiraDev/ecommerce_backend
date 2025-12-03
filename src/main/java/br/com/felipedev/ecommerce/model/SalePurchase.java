@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "sale_purchase")
+@Table(name = "sale_purchase", uniqueConstraints = @UniqueConstraint(name = "sp_nota_fiscal_venda_uk", columnNames = {"nota_fiscal_venda_id"}))
 @Getter
 @Setter
 @AllArgsConstructor
@@ -45,6 +45,10 @@ public class SalePurchase {
     @ManyToOne
     @JoinColumn(name = "payment_method_id", nullable = false, foreignKey = @ForeignKey(name = "payment_method_fk", value = ConstraintMode.CONSTRAINT))
     private PaymentMethod paymentMethod;
+
+    @OneToOne
+    @JoinColumn(name = "nota_fiscal_venda_id", foreignKey = @ForeignKey(name = "nota_fiscal_venda_fk", value = ConstraintMode.CONSTRAINT))
+    private NotaFiscalVenda notaFiscalVenda;
 
     @ManyToOne
     @JoinColumn(name = "discount_coupon_id", foreignKey = @ForeignKey(name = "discount_coupon_fk", value = ConstraintMode.CONSTRAINT))
