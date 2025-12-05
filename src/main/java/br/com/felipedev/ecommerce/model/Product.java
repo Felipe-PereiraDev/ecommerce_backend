@@ -1,5 +1,6 @@
 package br.com.felipedev.ecommerce.model;
 
+import br.com.felipedev.ecommerce.dto.product.ProductUpdateDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -72,6 +73,65 @@ public class Product {
 
     private Integer clickCount = 0;
 
-//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    public Product(Brand brand, Category category, Double depth, String description, Double height, String name, BigDecimal price, Integer stockAlertQuantity, Integer stockQuantity, String unitType, Double weight, Double width, String youtubeLink) {
+        this.brand = brand;
+        this.category = category;
+        this.depth = depth;
+        this.description = description;
+        this.height = height;
+        this.name = name;
+        this.price = price;
+        this.stockAlertQuantity = stockAlertQuantity;
+        this.stockQuantity = stockQuantity;
+        this.unitType = unitType;
+        this.weight = weight;
+        this.width = width;
+        this.youtubeLink = youtubeLink;
+    }
+
+    public void update(ProductUpdateDTO request, Brand brand, Category category) {
+        if (request.name() != null && !request.name().isBlank()) {
+            this.name = request.name();
+        }
+        if (request.price() != null) {
+            this.price = request.price();
+        }
+        if (request.unitType() != null && !request.unitType().isBlank()) {
+            this.unitType = request.unitType();
+        }
+        if (request.description() != null && !request.description().isBlank()) {
+            this.description = request.description();
+        }
+        if (request.weight() != null) {
+            this.weight = request.weight();
+        }
+        if (request.width() != null) {
+            this.width = request.width();
+        }
+        if (request.height() != null) {
+            this.height = request.height();
+        }
+        if (request.depth() != null) {
+            this.depth = request.depth();
+        }
+        if (request.stockQuantity() != null) {
+            this.stockQuantity = request.stockQuantity();
+        }
+        if (request.stockAlertQuantity() != null) {
+            this.stockAlertQuantity = request.stockAlertQuantity();
+        }
+        if (request.youtubeLink() != null && request.youtubeLink().isBlank()) {
+            this.youtubeLink = request.youtubeLink();
+        }
+        if (brand != null && brand.getId() != null) {
+            this.brand = brand;
+        }
+        if (category != null && category.getId() != null) {
+            this.category = category;
+        }
+
+    }
+
+    //    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
 //    List<ProductImage> images = new ArrayList<>();
 }
