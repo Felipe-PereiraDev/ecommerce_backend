@@ -8,25 +8,25 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "accounts_payable")
+@Table(name = "account_payable")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class AccountsPayable {
+public class AccountPayable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     private String description;
 
     @Column(name = "total_amount", precision = 10, scale = 2, nullable = false)
     private BigDecimal totalAmount;
 
-    @Column(name = "discount_amount", precision = 10, scale = 2, nullable = false)
+    @Column(name = "discount_amount", precision = 10, scale = 2)
     private BigDecimal discountAmount;
 
     @Column(name = "due_date", nullable = false)
@@ -36,7 +36,7 @@ public class AccountsPayable {
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
-    @Column(name = "payment_date", nullable = false)
+    @Column(name = "payment_date")
     private LocalDate paymentDate;
 
     @ManyToOne

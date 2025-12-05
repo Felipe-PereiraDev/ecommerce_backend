@@ -9,18 +9,16 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Table(name = "people", uniqueConstraints = {
+@Table(name = "person", uniqueConstraints = {
         @UniqueConstraint(name = "email_uk", columnNames = {"email"}),
-        @UniqueConstraint(name = "phone_uk", columnNames = {"phone"}),
-        @UniqueConstraint(name = "cnpj_uk", columnNames = {"cnpj"}),
-        @UniqueConstraint(name = "cpf_uk", columnNames = {"cpf"})
+        @UniqueConstraint(name = "phone_uk", columnNames = {"phone"})
 })
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "person_type")
+@Inheritance(strategy = InheritanceType.JOINED)
+//@DiscriminatorColumn(name = "person_type")
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +30,7 @@ public class Person {
     @Column(name = "email", nullable = false, length = 100)
     private String email;
 
-    @Column(name = "phone", nullable = false)
+    @Column(name = "phone", nullable = false, length = 20)
     private String phone;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)

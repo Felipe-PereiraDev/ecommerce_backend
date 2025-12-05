@@ -7,7 +7,7 @@ import lombok.*;
 
 @Entity
 @Table(
-        name = "payment_methods",
+        name = "payment_method",
         uniqueConstraints = @UniqueConstraint(
                 name = "payment_type_uk",
                 columnNames = {"payment_type"}
@@ -24,5 +24,6 @@ public class PaymentMethod {
     private Long id;
 
     @Column(name = "payment_type", nullable = false)
+    @Enumerated(EnumType.STRING)
     private PaymentType paymentType;
 }

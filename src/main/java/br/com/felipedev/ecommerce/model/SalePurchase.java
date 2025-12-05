@@ -47,7 +47,7 @@ public class SalePurchase {
     private PaymentMethod paymentMethod;
 
     @OneToOne
-    @JoinColumn(name = "nota_fiscal_venda_id", foreignKey = @ForeignKey(name = "nota_fiscal_venda_fk", value = ConstraintMode.CONSTRAINT))
+    @JoinColumn(name = "nota_fiscal_venda_id", nullable = false, foreignKey = @ForeignKey(name = "nota_fiscal_venda_fk", value = ConstraintMode.CONSTRAINT))
     private NotaFiscalVenda notaFiscalVenda;
 
     @ManyToOne
@@ -57,6 +57,7 @@ public class SalePurchase {
     @Column(name = "shipping_cost", nullable = false)
     private BigDecimal shippingCost;
 
+    @Column(nullable = false)
     private Integer deliveryDays;
 
     @Column(name = "sale_date", nullable = false)

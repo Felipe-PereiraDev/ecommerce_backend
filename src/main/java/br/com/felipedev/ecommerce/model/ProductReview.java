@@ -21,6 +21,7 @@ public class ProductReview {
     @Column(nullable = false)
     private Integer rating;
 
+    @Column(nullable = false)
     private String description;
 
     @ManyToOne

@@ -1,9 +1,7 @@
 package br.com.felipedev.ecommerce.model;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,14 +9,18 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Table(name = "person_fisica", uniqueConstraints = {
+        @UniqueConstraint(name = "cpf_uk", columnNames = {"cpf"})
+})
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@DiscriminatorValue("FISICA")
+@PrimaryKeyJoinColumn(name = "id", foreignKey = @ForeignKey(name = "person_fisica_fk", value = ConstraintMode.CONSTRAINT))
+//@DiscriminatorValue("FISICA")
 public class PersonFisica extends Person{
-    @Column(nullable = false)
+    @Column(nullable = false, length = 11)
     private String cpf;
     @Column(nullable = false)
     private LocalDateTime dateOfBirth;

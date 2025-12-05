@@ -12,6 +12,7 @@ import java.util.List;
 
 @Entity
 //@Table(name = "products", uniqueConstraIntegers = {@UniqueConstraInteger(columnNames = {"seller_id ", "name"})})
+@Table(name = "product")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -22,7 +23,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", length = 100)
+    @Column(name = "name", length = 100, nullable = false)
     private String name;
 
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
@@ -37,12 +38,16 @@ public class Product {
     @Column(nullable = false)
     private Boolean active = true;
 
+    @Column(nullable = false)
     private Double weight;
 
+    @Column(nullable = false)
     private Double width;
 
+    @Column(nullable = false)
     private Double height;
 
+    @Column(nullable = false)
     private Double depth;
 
     @Column(name = "stock_quantity", nullable = false)

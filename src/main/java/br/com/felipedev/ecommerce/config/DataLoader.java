@@ -30,11 +30,11 @@ public class DataLoader implements CommandLineRunner {
 
         List<Role> roles = List.of(roleAdmin, roleUser);
 
-        if (!userRepository.existsByUsername("admin")) {
-            User user = new User(null, "admin", "admin", LocalDate.now(), List.of());
-            userRepository.save(user);
-            System.out.println("✅ Usuário admin criado com sucesso!");
-        }
+//        if (!userRepository.existsByUsername("admin")) {
+//            User user = new User(null, "admin", "admin", LocalDate.now(), List.of(), null);
+//            userRepository.save(user);
+//            System.out.println("✅ Usuário admin criado com sucesso!");
+//        }
     }
 
 }

@@ -31,6 +31,7 @@ public class User implements UserDetails {
     @Column(length = 50, nullable = false)
     private String password;
 
+    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private LocalDate passwordUpdatedAt;
 
@@ -57,6 +58,10 @@ public class User implements UserDetails {
             )
     )
     private List<Role> roles = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "person_id", nullable = false, foreignKey = @ForeignKey(name = "person_fk", value = ConstraintMode.CONSTRAINT))
+    private Person person;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

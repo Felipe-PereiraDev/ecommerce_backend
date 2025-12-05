@@ -38,7 +38,7 @@ public class NotaFiscalVenda {
     private String PDF;
 
     @OneToOne
-    @JoinColumn(name = "sale_purchase_id", foreignKey = @ForeignKey(name = "sale_purchase_fk", value = ConstraintMode.CONSTRAINT))
+    @JoinColumn(name = "sale_purchase_id", nullable = false, foreignKey = @ForeignKey(name = "sale_purchase_fk", value = ConstraintMode.CONSTRAINT))
     private SalePurchase salePurchase;
 
 

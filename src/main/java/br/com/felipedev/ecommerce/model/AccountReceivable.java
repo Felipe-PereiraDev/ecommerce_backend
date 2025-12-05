@@ -8,13 +8,13 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "accounts_receivable", uniqueConstraints = @UniqueConstraint(name = "ar_sale_purchase_uk", columnNames = {"sale_purchase_id"}))
+@Table(name = "account_receivable", uniqueConstraints = @UniqueConstraint(name = "ar_sale_purchase_uk", columnNames = {"sale_purchase_id"}))
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class AccountsReceivable {
+public class AccountReceivable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +22,7 @@ public class AccountsReceivable {
 
     private String description;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ReceivableStatus status;
 
@@ -29,7 +30,7 @@ public class AccountsReceivable {
     @Temporal(TemporalType.DATE)
     private LocalDate dueDate;
 
-    @Column(name = "payment_date", nullable = false)
+    @Column(name = "payment_date")
     private LocalDate paymentDate;
 
     @Column(name = "total_amount", precision = 10, scale = 2, nullable = false)

@@ -2,7 +2,6 @@ package br.com.felipedev.ecommerce.model;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +14,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "nota_fiscal_compra", uniqueConstraints = {
         @UniqueConstraint(name = "nfc_number_uk", columnNames = {"number"}),
-        @UniqueConstraint(name = "nfc_accounts_payable_uk", columnNames = {"accounts_payable_id"})
+        @UniqueConstraint(name = "nfc_account_payable_uk", columnNames = {"account_payable_id"})
 })
 @Getter
 @Setter
@@ -35,13 +34,13 @@ public class NotaFiscalCompra {
     @Column(name = "total_amount", nullable = false)
     private BigDecimal totalAmount;
 
-    @Column(name = "discount_amount", nullable = false)
+    @Column(name = "discount_amount")
     private BigDecimal discountAmount;
 
     @Column(name = "amount_icms", nullable = false)
     private BigDecimal amountIcms;
 
-    @Column(name = "purchase_date")
+    @Column(name = "purchase_date", nullable = false)
     private LocalDateTime purchaseDate;
 
     @ManyToOne
@@ -49,8 +48,8 @@ public class NotaFiscalCompra {
     private Person person;
 
     @OneToOne
-    @JoinColumn(name = "accounts_payable_id", foreignKey = @ForeignKey(name = "accounts_payable_fk", value = ConstraintMode.CONSTRAINT))
-    private AccountsPayable accountsPayable;
+    @JoinColumn(name = "account_payable_id", foreignKey = @ForeignKey(name = "account_payable_fk", value = ConstraintMode.CONSTRAINT))
+    private AccountPayable accountPayable;
 
     @Override
     public boolean equals(Object o) {
