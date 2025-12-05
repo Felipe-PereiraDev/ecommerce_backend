@@ -34,7 +34,7 @@ public class BrandController implements BrandControllerDocs {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<BrandResponseDTO> deleteById(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
         brandService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

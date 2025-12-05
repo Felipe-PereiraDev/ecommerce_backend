@@ -21,6 +21,7 @@ public class CategoryService {
     @Autowired
     private CategoryMapper categoryMapper;
 
+
     public CategoryResponseDTO create(CategoryRequestDTO request) {
         if (categoryRepository.existsByDescription(request.description())) {
             throw new DescriptionExistsException("The category %s already exists".formatted(request.description()));
@@ -30,31 +31,30 @@ public class CategoryService {
         return categoryMapper.toCategoryResponseDTO(category);
     }
 
+    protected Category findById(Long id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("The category with id %d not exists".formatted(id)));
+    }
+
     public List<CategoryResponseDTO> findAll() {
         return categoryMapper.toCategoryResponseDTOs(categoryRepository.findAll());
     }
 
     public CategoryResponseDTO updateDescription(Long id, CategoryRequestDTO request) {
-        Optional<Category> category = categoryRepository.findById(id);
-        if (category.isEmpty()) {
-            throw new EntityNotFoundException("The category with id %d not exists".formatted(id));
-        }
+        Category category = findById(id);
 
         if (categoryRepository.existsByDescription(request.description())) {
             throw new DescriptionExistsException("The category %s already exists".formatted(request.description()));
         }
 
-        category.get().setDescription(request.description());
-        return categoryMapper.toCategoryResponseDTO(category.get());
+        category.setDescription(request.description());
+        return categoryMapper.toCategoryResponseDTO(category);
     }
 
 
     public void deleteById(Long id) {
-        Optional<Category> category = categoryRepository.findById(id);
-        if (category.isEmpty()) {
-            throw new EntityNotFoundException("The category with id %d not exists".formatted(id));
-        }
-        categoryRepository.delete(category.get());
+        Category category = findById(id);
+        categoryRepository.delete(category);
     }
 
 

@@ -21,5 +21,5 @@ public interface BrandControllerDocs {
     public ResponseEntity<BrandResponseDTO> updateDescription(Long id, BrandRequestDTO request);
     
     @Operation(summary = "Deletar Marcar", description = "Deleta uma merca pelo seu id")
-    public ResponseEntity<BrandResponseDTO> deleteById(Long id);
+    public ResponseEntity<Void> deleteById(Long id);
 }

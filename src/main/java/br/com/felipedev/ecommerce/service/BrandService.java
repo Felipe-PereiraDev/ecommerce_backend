@@ -6,6 +6,7 @@ import br.com.felipedev.ecommerce.exception.DescriptionExistsException;
 import br.com.felipedev.ecommerce.exception.EntityNotFoundException;
 import br.com.felipedev.ecommerce.mapper.BrandMapper;
 import br.com.felipedev.ecommerce.model.Brand;
+import br.com.felipedev.ecommerce.model.Category;
 import br.com.felipedev.ecommerce.repository.BrandRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,30 +30,28 @@ public class BrandService {
         return brandMapper.toBrandResponseDTO(brand);
     }
 
+    protected Brand findById(Long id) {
+        return brandRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("The brand with id %d not exists".formatted(id)));
+    }
+
     public List<BrandResponseDTO> findAll() {
         return brandMapper.toBrandResponseDTOs(brandRepository.findAll());
     }
 
     public BrandResponseDTO updateDescription(Long id, BrandRequestDTO request) {
-        Optional<Brand> brand = brandRepository.findById(id);
-        if (brand.isEmpty()) {
-            throw new EntityNotFoundException("The brand with id %d not exists".formatted(id));
-        }
+        Brand brand = findById(id);
 
         if (brandRepository.existsByDescription(request.description())) {
             throw new DescriptionExistsException("The brand %s already exists".formatted(request.description()));
         }
-
-        brand.get().setDescription(request.description());
-        return brandMapper.toBrandResponseDTO(brand.get());
+        brand.setDescription(request.description());
+        return brandMapper.toBrandResponseDTO(brand);
     }
 
 
     public void deleteById(Long id) {
-        Optional<Brand> brand = brandRepository.findById(id);
-        if (brand.isEmpty()) {
-            throw new EntityNotFoundException("The brand with id %d not exists".formatted(id));
-        }
-        brandRepository.delete(brand.get());
+        Brand brand = findById(id);
+        brandRepository.delete(brand);
     }
 }

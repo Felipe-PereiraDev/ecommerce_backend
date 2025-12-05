@@ -21,5 +21,5 @@ public interface CategoryControllerDocs {
     public ResponseEntity<CategoryResponseDTO> updateDescription(Long id, CategoryRequestDTO request);
     
     @Operation(summary = "Deletar Categoria", description = "Deleta uma merca pelo seu id")
-    public ResponseEntity<CategoryResponseDTO> deleteById(Long id);
+    public ResponseEntity<Void> deleteById(Long id);
 }
