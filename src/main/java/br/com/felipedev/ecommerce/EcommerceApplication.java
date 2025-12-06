@@ -2,8 +2,16 @@ package br.com.felipedev.ecommerce;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
+@EnableTransactionManagement
+@EntityScan(basePackages = "br.com.felipedev.ecommerce.model")
+@EnableJpaRepositories(basePackages = {"br.com.felipedev.ecommerce.repository"})
+@ComponentScan(basePackages = {"br.*"})
 public class EcommerceApplication {
 
 	public static void main(String[] args) {
