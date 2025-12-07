@@ -9,13 +9,13 @@ import java.util.List;
 @Component
 public class RoleMapper {
 
-    public RoleResponseDTO toRoleResponseDTO(Role role) {
+    public RoleResponseDTO toResponseDTO(Role role) {
         return new RoleResponseDTO(role.getId(), role.getRole().name());
     }
 
-    public List<RoleResponseDTO> toRoleResponseDTOs(List<Role> role) {
+    public List<RoleResponseDTO> toResponseDTOList(List<Role> role) {
         return role.stream()
-                .map(this::toRoleResponseDTO)
+                .map(this::toResponseDTO)
                 .toList();
     }
 }

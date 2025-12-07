@@ -22,6 +22,11 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.NOT_FOUND, ex, servletRequest);
     }
 
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateResourceException(Exception ex, HttpServletRequest servletRequest) {
+        return buildErrorResponse(HttpStatus.CONFLICT, ex, servletRequest);
+    }
+
     private ResponseEntity<ErrorResponse> buildErrorResponse(HttpStatus status, Exception exception, HttpServletRequest servletRequest) {
         ErrorResponse errorResponse = new ErrorResponse(
                 status.value(),

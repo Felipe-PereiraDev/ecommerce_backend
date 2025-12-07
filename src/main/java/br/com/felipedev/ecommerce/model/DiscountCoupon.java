@@ -1,5 +1,6 @@
 package br.com.felipedev.ecommerce.model;
 
+import br.com.felipedev.ecommerce.dto.discountcoupon.DiscountCouponUpdateDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,4 +32,25 @@ public class DiscountCoupon {
     @Column(name = "due_date", nullable = false)
     private LocalDateTime dueDate;
 
+    public DiscountCoupon(BigDecimal percentage, LocalDateTime dueDate, BigDecimal discountAmount, String code) {
+        this.percentage = percentage;
+        this.dueDate = dueDate;
+        this.discountAmount = discountAmount;
+        this.code = code;
+    }
+
+    public void update(DiscountCouponUpdateDTO request) {
+        if (request.code() != null && !request.code().isBlank()) {
+            this.code = request.code();
+        }
+        if (request.discountAmount() != null) {
+            this.discountAmount = request.discountAmount();
+        }
+        if (request.percentage() != null) {
+            this.percentage = request.percentage();
+        }
+        if (request.dueDate() != null) {
+            this.dueDate = request.dueDate();
+        }
+    }
 }
