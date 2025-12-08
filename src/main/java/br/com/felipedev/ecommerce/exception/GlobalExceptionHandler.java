@@ -27,6 +27,11 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.CONFLICT, ex, servletRequest);
     }
 
+    @ExceptionHandler(InvalidLoginException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidLoginException (Exception ex, HttpServletRequest servletRequest) {
+        return buildErrorResponse(HttpStatus.UNAUTHORIZED, ex, servletRequest);
+    }
+
     private ResponseEntity<ErrorResponse> buildErrorResponse(HttpStatus status, Exception exception, HttpServletRequest servletRequest) {
         ErrorResponse errorResponse = new ErrorResponse(
                 status.value(),

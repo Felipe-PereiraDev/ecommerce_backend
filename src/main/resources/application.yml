@@ -56,6 +56,10 @@ server:
     include-message: ALWAYS
     include-binding-errors: always
 
+jwt:
+  private-key-path: classpath:keys/private.pem
+  public-key-path: classpath:keys/public.pem
+
 
 #  jwt.private.key=classpath:privatekey.pem
 #  jwt.public.key=classpath:publickey.pem

@@ -10,18 +10,18 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-@Tag(name = "Product", description = "Endpoints para gerenciar products")
+@Tag(name = "Product", description = "Endpoints para gerenciar produtos")
 public interface ProductControllerDocs {
 
-    @Operation(summary = "Criar Product", description = "Cria uma nova product")
+    @Operation(summary = "Criar Produto", description = "Cria um novo produto")
     public ResponseEntity<ProductResponseDTO> createProduct(ProductRequestDTO request);
 
-    @Operation(summary = "Listar Products", description = "Retorna uma lista de products")
+    @Operation(summary = "Listar Produtos", description = "Retorna uma lista de produto")
     public ResponseEntity<List<ProductResponseDTO>> findAll();
 
-    @Operation(summary = "Atualizar Descrição", description = "Atualiza a descrição de uma product existente")
+    @Operation(summary = "Atualizar Produto", description = "Atualiza a descrição de um produto existente")
     public ResponseEntity<ProductResponseDTO> updateProduct(Long id, ProductUpdateDTO request);
     
-    @Operation(summary = "Deletar Product", description = "Deleta uma merca pelo seu id")
+    @Operation(summary = "Deletar Produto", description = "Deleta um produto pelo seu id")
     public ResponseEntity<Void> deleteById(Long id);
 }

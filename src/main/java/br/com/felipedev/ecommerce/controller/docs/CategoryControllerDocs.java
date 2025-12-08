@@ -20,6 +20,6 @@ public interface CategoryControllerDocs {
     @Operation(summary = "Atualizar Descrição", description = "Atualiza a descrição de uma categoria existente")
     public ResponseEntity<CategoryResponseDTO> updateDescription(Long id, CategoryRequestDTO request);
     
-    @Operation(summary = "Deletar Categoria", description = "Deleta uma merca pelo seu id")
+    @Operation(summary = "Deletar Categoria", description = "Deleta uma categoria pelo seu id")
     public ResponseEntity<Void> deleteById(Long id);
 }

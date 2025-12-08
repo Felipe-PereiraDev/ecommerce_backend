@@ -20,6 +20,6 @@ public interface BrandControllerDocs {
     @Operation(summary = "Atualizar Descrição", description = "Atualiza a descrição de uma marca existente")
     public ResponseEntity<BrandResponseDTO> updateDescription(Long id, BrandRequestDTO request);
     
-    @Operation(summary = "Deletar Marcar", description = "Deleta uma merca pelo seu id")
+    @Operation(summary = "Deletar Marcar", description = "Deleta uma marca pelo seu id")
     public ResponseEntity<Void> deleteById(Long id);
 }
