@@ -6,13 +6,11 @@ import br.com.felipedev.ecommerce.exception.DescriptionExistsException;
 import br.com.felipedev.ecommerce.exception.EntityNotFoundException;
 import br.com.felipedev.ecommerce.mapper.BrandMapper;
 import br.com.felipedev.ecommerce.model.Brand;
-import br.com.felipedev.ecommerce.model.Category;
 import br.com.felipedev.ecommerce.repository.BrandRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BrandService {
@@ -27,7 +25,7 @@ public class BrandService {
         }
         Brand brand = new Brand(null, request.description());
         brandRepository.save(brand);
-        return brandMapper.toBrandResponseDTO(brand);
+        return brandMapper.toResponseDTO(brand);
     }
 
     protected Brand findById(Long id) {
@@ -36,17 +34,16 @@ public class BrandService {
     }
 
     public List<BrandResponseDTO> findAll() {
-        return brandMapper.toBrandResponseDTOs(brandRepository.findAll());
+        return brandMapper.toResponseDTOList(brandRepository.findAll());
     }
 
     public BrandResponseDTO updateDescription(Long id, BrandRequestDTO request) {
         Brand brand = findById(id);
-
         if (brandRepository.existsByDescription(request.description())) {
             throw new DescriptionExistsException("The brand %s already exists".formatted(request.description()));
         }
         brand.setDescription(request.description());
-        return brandMapper.toBrandResponseDTO(brand);
+        return brandMapper.toResponseDTO(brand);
     }
 
 
