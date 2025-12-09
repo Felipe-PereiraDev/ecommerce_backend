@@ -1,8 +1,6 @@
 package br.com.felipedev.ecommerce.mapper;
 
-import br.com.felipedev.ecommerce.dto.product.ProductRequestDTO;
 import br.com.felipedev.ecommerce.dto.product.ProductResponseDTO;
-import br.com.felipedev.ecommerce.model.Category;
 import br.com.felipedev.ecommerce.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,7 +15,7 @@ public class ProductMapper {
     @Autowired
     private CategoryMapper categoryMapper;
 
-    public ProductResponseDTO toProductResponseDTO(Product product) {
+    public ProductResponseDTO toResponseDTO(Product product) {
         return new ProductResponseDTO(
                 product.getId(),
                 product.getName(),
@@ -31,14 +29,14 @@ public class ProductMapper {
                 product.getStockQuantity(),
                 product.getStockAlertQuantity(),
                 product.getYoutubeLink(),
-                brandMapper.toBrandResponseDTO(product.getBrand()),
-                categoryMapper.toCategoryResponseDTO(product.getCategory())
+                brandMapper.toResponseDTO(product.getBrand()),
+                categoryMapper.toResponseDTO(product.getCategory())
         );
     }
 
-    public List<ProductResponseDTO> toProductResponseDTOs(List<Product> productList) {
+    public List<ProductResponseDTO> toResponseDTOList(List<Product> productList) {
         return productList.stream()
-                .map(this::toProductResponseDTO)
+                .map(this::toResponseDTO)
                 .toList();
     }
 

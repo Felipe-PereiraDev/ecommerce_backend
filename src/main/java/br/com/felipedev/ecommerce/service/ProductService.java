@@ -8,7 +8,6 @@ import br.com.felipedev.ecommerce.mapper.ProductMapper;
 import br.com.felipedev.ecommerce.model.Brand;
 import br.com.felipedev.ecommerce.model.Category;
 import br.com.felipedev.ecommerce.model.Product;
-import br.com.felipedev.ecommerce.repository.CategoryRepository;
 import br.com.felipedev.ecommerce.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,12 +48,12 @@ public class ProductService {
                 request.youtubeLink()
         );
         productRepository.save(newProduct);
-        return productMapper.toProductResponseDTO(newProduct);
+        return productMapper.toResponseDTO(newProduct);
     }
 
     public List<ProductResponseDTO> findAll() {
         List<Product> productList = productRepository.findAll();
-        return productMapper.toProductResponseDTOs(productList);
+        return productMapper.toResponseDTOList(productList);
     }
 
     public ProductResponseDTO updateProduct(Long id, ProductUpdateDTO request) {
@@ -69,7 +68,7 @@ public class ProductService {
         }
         product.update(request, brand, category);
         productRepository.save(product);
-        return productMapper.toProductResponseDTO(product);
+        return productMapper.toResponseDTO(product);
     }
 
     protected Product findById(Long id) {

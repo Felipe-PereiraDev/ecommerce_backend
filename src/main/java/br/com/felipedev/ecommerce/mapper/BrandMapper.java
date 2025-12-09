@@ -9,13 +9,13 @@ import java.util.List;
 @Component
 public class BrandMapper {
 
-    public BrandResponseDTO toBrandResponseDTO(Brand brand) {
+    public BrandResponseDTO toResponseDTO(Brand brand) {
         return new BrandResponseDTO(brand.getId(), brand.getDescription());
     }
 
-    public List<BrandResponseDTO> toBrandResponseDTOs(List<Brand> brandList) {
+    public List<BrandResponseDTO> toResponseDTOList(List<Brand> brandList) {
         return brandList.stream()
-                .map(this::toBrandResponseDTO)
+                .map(this::toResponseDTO)
                 .toList();
     }
 }

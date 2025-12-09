@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CategoryService {
@@ -28,7 +27,7 @@ public class CategoryService {
         }
         Category category = new Category(null, request.description());
         categoryRepository.save(category);
-        return categoryMapper.toCategoryResponseDTO(category);
+        return categoryMapper.toResponseDTO(category);
     }
 
     protected Category findById(Long id) {
@@ -37,7 +36,7 @@ public class CategoryService {
     }
 
     public List<CategoryResponseDTO> findAll() {
-        return categoryMapper.toCategoryResponseDTOs(categoryRepository.findAll());
+        return categoryMapper.toResponseDTOList(categoryRepository.findAll());
     }
 
     public CategoryResponseDTO updateDescription(Long id, CategoryRequestDTO request) {
@@ -48,7 +47,7 @@ public class CategoryService {
         }
 
         category.setDescription(request.description());
-        return categoryMapper.toCategoryResponseDTO(category);
+        return categoryMapper.toResponseDTO(category);
     }
 
 
