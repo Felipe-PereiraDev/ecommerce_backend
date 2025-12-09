@@ -9,7 +9,7 @@ import java.util.List;
 
 @Component
 public class DiscountCouponMapper {
-    public DiscountCouponResponseDTO toDiscountCouponResponseDTO(DiscountCoupon discountCoupon) {
+    public DiscountCouponResponseDTO toResponseDTO(DiscountCoupon discountCoupon) {
         return new DiscountCouponResponseDTO(
                 discountCoupon.getId(),
                 discountCoupon.getCode(),
@@ -19,9 +19,9 @@ public class DiscountCouponMapper {
         );
     }
 
-    public List<DiscountCouponResponseDTO> toDiscountCouponResponseDTOs(List<DiscountCoupon> productList) {
+    public List<DiscountCouponResponseDTO> toResponseDTOList(List<DiscountCoupon> productList) {
         return productList.stream()
-                .map(this::toDiscountCouponResponseDTO)
+                .map(this::toResponseDTO)
                 .toList();
     }
 

@@ -40,12 +40,12 @@ public class DiscountCouponService {
                 request.code()
         );
         couponRepository.save(newDiscountCoupon);
-        return couponMapper.toDiscountCouponResponseDTO(newDiscountCoupon);
+        return couponMapper.toResponseDTO(newDiscountCoupon);
     }
 
     public List<DiscountCouponResponseDTO> findAll() {
         List<DiscountCoupon> couponList = couponRepository.findAll();
-        return couponMapper.toDiscountCouponResponseDTOs(couponList);
+        return couponMapper.toResponseDTOList(couponList);
     }
 
     public DiscountCouponResponseDTO updateDiscountCoupon(Long id, DiscountCouponUpdateDTO request) {
@@ -56,7 +56,7 @@ public class DiscountCouponService {
 
         discountCoupon.update(request);
         couponRepository.save(discountCoupon);
-        return couponMapper.toDiscountCouponResponseDTO(discountCoupon);
+        return couponMapper.toResponseDTO(discountCoupon);
     }
 
     protected DiscountCoupon findById(Long id) {
@@ -76,6 +76,6 @@ public class DiscountCouponService {
                 .orElseThrow(
                         () -> new EntityNotFoundException("The coupon discount with code %s not exists".formatted(code))
                 );
-        return couponMapper.toDiscountCouponResponseDTO(discountCoupon);
+        return couponMapper.toResponseDTO(discountCoupon);
     }
 }
