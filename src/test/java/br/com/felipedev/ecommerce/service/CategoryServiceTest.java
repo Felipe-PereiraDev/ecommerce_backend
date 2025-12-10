@@ -76,7 +76,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void test_findById_WhenCategoryIdExists_ShouldTrow() {
+    void test_findById_WhenCategoryIdExists_ShouldReturnCategoryResponseDTO() {
         String expectedDescription = "ELECTRONICS";
         Long expectedId = 1L;
 
