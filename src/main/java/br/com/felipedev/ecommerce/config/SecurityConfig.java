@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -42,19 +41,17 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                     .requestMatchers("/users/**").permitAll()
-                    .requestMatchers(HttpMethod.GET,"/products/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/brands/**", "/categories/**", "/products/**").permitAll()
                     .requestMatchers(HttpMethod.POST,"/products/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.PUT,"/products/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.DELETE,"/products/**").hasRole("ADMIN")
 
-                    .requestMatchers(HttpMethod.GET,"/brands/**").permitAll()
                     .requestMatchers(HttpMethod.POST,"/brands/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.PUT,"/brands/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.DELETE,"/brands/**").hasRole("ADMIN")
 
-                    .requestMatchers(HttpMethod.GET,"/categories/**").permitAll()
                     .requestMatchers(HttpMethod.POST,"/categories/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.PUT,"/categories/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.DELETE,"/categories/**").hasRole("ADMIN")

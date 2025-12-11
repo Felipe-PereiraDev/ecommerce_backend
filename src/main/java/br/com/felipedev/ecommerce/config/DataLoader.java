@@ -29,21 +29,20 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Role roleAdmin = roleRepository.findByRole(RoleType.ROLE_ADMIN)
-                .orElseGet(() -> roleRepository.save(new Role(null, RoleType.ROLE_ADMIN)));
-
-        Role roleUser = roleRepository.findByRole(RoleType.ROLE_USER)
-                .orElseGet(() -> roleRepository.save(new Role(null, RoleType.ROLE_USER)));
-
-        User admin = new User();
-        Person person = new PersonFisica();
-        person.setId(2L);
-        admin.setPassword("admin");
-        admin.setUsername("admin");
-        admin.setRoles(List.of(roleAdmin, roleUser));
-        admin.setPasswordUpdatedAt(LocalDate.now());
-        admin.setPerson(person);
-        userRepository.findByUsername("admin")
-                .orElseGet(() -> userRepository.save(admin));
+//        Role roleAdmin = roleRepository.findByRole(RoleType.ROLE_ADMIN)
+//                .orElseGet(() -> roleRepository.save(new Role(null, RoleType.ROLE_ADMIN)));
+//
+//        Role roleUser = roleRepository.findByRole(RoleType.ROLE_USER)
+//                .orElseGet(() -> roleRepository.save(new Role(null, RoleType.ROLE_USER)));
+//        User admin = new User();
+//        Person person = new PersonFisica();
+//        person.setId(2L);
+//        admin.setPassword("admin");
+//        admin.setUsername("admin");
+//        admin.setRoles(List.of(roleAdmin, roleUser));
+//        admin.setPasswordUpdatedAt(LocalDate.now());
+//        admin.setPerson(person);
+//        userRepository.findByUsername("admin")
+//                .orElseGet(() -> userRepository.save(admin));
     }
 }
