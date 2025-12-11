@@ -73,7 +73,7 @@ class BrandServiceTest {
     }
 
     @Test
-    void test_findById_WhenBrandIdExists_ShouldResturnBrandResponseDTO() {
+    void test_findById_WhenBrandIdExists_ShouldReturnBrandResponseDTO() {
         String expectedDescription = "ADIDAS";
         Long expectedId = 1L;
 

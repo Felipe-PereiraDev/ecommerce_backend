@@ -43,6 +43,7 @@ public class BrandService {
             throw new DescriptionExistsException("The brand %s already exists".formatted(request.description()));
         }
         brand.setDescription(request.description());
+        brandRepository.save(brand);
         return brandMapper.toResponseDTO(brand);
     }
 
