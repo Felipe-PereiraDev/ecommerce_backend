@@ -47,6 +47,7 @@ public class CategoryService {
         }
 
         category.setDescription(request.description());
+        categoryRepository.save(category);
         return categoryMapper.toResponseDTO(category);
     }
 
