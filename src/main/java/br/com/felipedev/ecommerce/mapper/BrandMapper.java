@@ -10,7 +10,7 @@ import java.util.List;
 public class BrandMapper {
 
     public BrandResponseDTO toResponseDTO(Brand brand) {
-        return new BrandResponseDTO(brand.getId(), brand.getDescription());
+        return new BrandResponseDTO(brand.getId(), brand.getDescription(), brand.getSeller().getId());
     }
 
     public List<BrandResponseDTO> toResponseDTOList(List<Brand> brandList) {

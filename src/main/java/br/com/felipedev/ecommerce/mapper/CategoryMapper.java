@@ -10,7 +10,7 @@ import java.util.List;
 public class CategoryMapper {
 
     public CategoryResponseDTO toResponseDTO(Category category) {
-        return new CategoryResponseDTO(category.getId(), category.getDescription());
+        return new CategoryResponseDTO(category.getId(), category.getDescription(), category.getSeller().getId());
     }
 
     public List<CategoryResponseDTO> toResponseDTOList(List<Category> categoryList) {
