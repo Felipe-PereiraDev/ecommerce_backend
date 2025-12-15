@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "users", uniqueConstraints = @UniqueConstraint(name = "username_uk", columnNames = {"username"}))
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(name = "email_uk", columnNames = {"email"}))
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -26,7 +26,7 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(length = 30, nullable = false)
-    private String username;
+    private String email;
 
     @Column(nullable = false)
     private String password;
@@ -60,7 +60,7 @@ public class User implements UserDetails {
     private List<Role> roles = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "person_id", nullable = false, foreignKey = @ForeignKey(name = "person_fk", value = ConstraintMode.CONSTRAINT))
+    @JoinColumn(name = "person_id", nullable = false,foreignKey = @ForeignKey(name = "person_fk", value = ConstraintMode.CONSTRAINT))
     private Person person;
 
     @Override
@@ -73,9 +73,8 @@ public class User implements UserDetails {
         return this.password;
     }
 
-    @Override
     public String getUsername() {
-        return this.username;
+        return this.email;
     }
 
     @Override

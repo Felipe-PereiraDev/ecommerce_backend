@@ -7,8 +7,6 @@ import java.util.List;
 
 public record UserPFResponseDTO(
         Long id,
-        String username,
-        String password,
         String nome,
         String email,
         String telefone,

@@ -1,4 +1,4 @@
-package br.com.felipedev.ecommerce.exception;
+package br.com.felipedev.ecommerce.exception.error;
 
 import java.time.LocalDateTime;
 

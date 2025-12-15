@@ -2,12 +2,13 @@ package br.com.felipedev.ecommerce.model;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Table(name = "person_juridica", uniqueConstraints = {
         @UniqueConstraint(name = "cnpj_uk", columnNames = {"cnpj"})
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@SuperBuilder
 @PrimaryKeyJoinColumn(name = "id", foreignKey = @ForeignKey(name = "person_juridica_fk", value = ConstraintMode.CONSTRAINT))
 //@DiscriminatorValue("JURIDICA")
 public class PersonJuridica extends Person{
@@ -30,10 +32,15 @@ public class PersonJuridica extends Person{
     private String corporateName;
     private String category;
 
-    public PersonJuridica(String email, String name, String phone, String cnpj, String corporateName, String tradeName) {
-        super(email, name, phone);
+    public PersonJuridica(String name, String phone, String category, String cnpj, String corporateName, String municipalRegistration, String stateRegistration, String tradeName) {
+        super(name, phone);
+        this.category = category;
         this.cnpj = cnpj;
         this.corporateName = corporateName;
+        this.municipalRegistration = municipalRegistration;
+        this.stateRegistration = stateRegistration;
         this.tradeName = tradeName;
     }
+
+
 }

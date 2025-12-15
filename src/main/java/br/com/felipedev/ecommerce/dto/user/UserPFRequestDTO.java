@@ -9,8 +9,6 @@ import org.hibernate.validator.constraints.br.CPF;
 import java.time.LocalDate;
 
 public record UserPFRequestDTO(
-        @NotBlank @Length(min = 2, max = 30)
-        String username,
         @NotBlank @Length(min = 6, max = 50)
         String password,
         @NotBlank @Length(min = 5, max = 100)
