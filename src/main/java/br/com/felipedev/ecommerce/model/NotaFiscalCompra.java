@@ -51,6 +51,11 @@ public class NotaFiscalCompra {
     @JoinColumn(name = "account_payable_id", foreignKey = @ForeignKey(name = "account_payable_fk", value = ConstraintMode.CONSTRAINT))
     private AccountPayable accountPayable;
 
+    @ManyToOne
+    @JoinColumn(name = "seller_id", nullable = false, foreignKey = @ForeignKey(name = "seller_fk", value = ConstraintMode.CONSTRAINT))
+    private PersonJuridica seller;
+
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof NotaFiscalCompra that)) return false;

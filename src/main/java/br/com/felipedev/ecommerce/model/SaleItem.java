@@ -34,4 +34,10 @@ public class SaleItem {
     @Column(nullable = false)
     private BigDecimal amount;
 
+    @ManyToOne
+    @JoinColumn(name = "seller_id", nullable = false, foreignKey = @ForeignKey(name = "seller_fk", value = ConstraintMode.CONSTRAINT))
+    private PersonJuridica seller;
+
+
+
 }

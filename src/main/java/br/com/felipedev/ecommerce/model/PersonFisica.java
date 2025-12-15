@@ -2,14 +2,11 @@ package br.com.felipedev.ecommerce.model;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Table(name = "person_fisica", uniqueConstraints = {
         @UniqueConstraint(name = "cpf_uk", columnNames = {"cpf"})
@@ -26,8 +23,8 @@ public class PersonFisica extends Person{
     @Column(nullable = false)
     private LocalDate dateOfBirth;
 
-    public PersonFisica(String email, String name, String phone, String cpf, LocalDate dateOfBirth) {
-        super(email, name, phone);
+    public PersonFisica(String name, String phone, String cpf, LocalDate dateOfBirth) {
+        super(name, phone);
         this.cpf = cpf;
         this.dateOfBirth = dateOfBirth;
     }

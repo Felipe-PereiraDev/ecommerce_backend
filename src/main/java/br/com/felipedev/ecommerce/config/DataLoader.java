@@ -25,24 +25,37 @@ public class DataLoader implements CommandLineRunner {
     private UserRepository userRepository;
 
     @Autowired
+    private PersonRepository personRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) throws Exception {
-//        Role roleAdmin = roleRepository.findByRole(RoleType.ROLE_ADMIN)
-//                .orElseGet(() -> roleRepository.save(new Role(null, RoleType.ROLE_ADMIN)));
+        roleRepository.findByRole(RoleType.ROLE_ADMIN)
+                .orElseGet(() -> roleRepository.save(new Role(null, RoleType.ROLE_ADMIN)));
+        roleRepository.findByRole(RoleType.ROLE_USER)
+                .orElseGet(() -> roleRepository.save(new Role(null, RoleType.ROLE_USER)));
+        roleRepository.findByRole(RoleType.ROLE_SELLER)
+                .orElseGet(() -> roleRepository.save(new Role(null, RoleType.ROLE_SELLER)));
+
+//        if (!userRepository.existsByUsername("admin")) {
+//            Role roleAdmin = roleRepository.findByRole(RoleType.ROLE_ADMIN).orElseThrow();
 //
-//        Role roleUser = roleRepository.findByRole(RoleType.ROLE_USER)
-//                .orElseGet(() -> roleRepository.save(new Role(null, RoleType.ROLE_USER)));
-//        User admin = new User();
-//        Person person = new PersonFisica();
-//        person.setId(2L);
-//        admin.setPassword("admin");
-//        admin.setUsername("admin");
-//        admin.setRoles(List.of(roleAdmin, roleUser));
-//        admin.setPasswordUpdatedAt(LocalDate.now());
-//        admin.setPerson(person);
-//        userRepository.findByUsername("admin")
-//                .orElseGet(() -> userRepository.save(admin));
+//            Role roleUser = roleRepository.findByRole(RoleType.ROLE_USER).orElseThrow();
+//            User admin = new User();
+//            PersonFisica person = new PersonFisica();
+//            person.setName("admin");
+//            person.setEmail("admin@email.com");
+//            person.setPhone("1234-5678");
+//            person.setCpf("12345678910");
+//            person.setDateOfBirth(LocalDate.now().minusYears(22));
+//            personRepository.save(person);
+//            admin.setPassword(passwordEncoder.encode("admin"));
+//            admin.setUsername("admin");
+//            admin.setRoles(List.of(roleAdmin, roleUser));
+//            admin.setPasswordUpdatedAt(LocalDate.now());
+//            admin.setPerson(person);
+//        }
     }
 }

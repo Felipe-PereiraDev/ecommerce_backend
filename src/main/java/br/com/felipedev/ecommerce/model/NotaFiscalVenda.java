@@ -41,5 +41,11 @@ public class NotaFiscalVenda {
     @JoinColumn(name = "sale_purchase_id", nullable = false, foreignKey = @ForeignKey(name = "sale_purchase_fk", value = ConstraintMode.CONSTRAINT))
     private SalePurchase salePurchase;
 
+    @ManyToOne
+    @JoinColumn(name = "seller_id", nullable = false, foreignKey = @ForeignKey(name = "seller_fk", value = ConstraintMode.CONSTRAINT))
+    private PersonJuridica seller;
+
+
+
 
 }

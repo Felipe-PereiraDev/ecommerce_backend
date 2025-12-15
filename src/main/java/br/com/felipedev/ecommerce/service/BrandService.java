@@ -6,6 +6,7 @@ import br.com.felipedev.ecommerce.exception.DescriptionExistsException;
 import br.com.felipedev.ecommerce.exception.EntityNotFoundException;
 import br.com.felipedev.ecommerce.mapper.BrandMapper;
 import br.com.felipedev.ecommerce.model.Brand;
+import br.com.felipedev.ecommerce.model.PersonJuridica;
 import br.com.felipedev.ecommerce.repository.BrandRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,12 +19,16 @@ public class BrandService {
     private BrandRepository brandRepository;
     @Autowired
     private BrandMapper brandMapper;
+    @Autowired
+    private PersonJuridicaService personJuridicaService;
 
     public BrandResponseDTO create(BrandRequestDTO request) {
         if (brandRepository.existsByDescription(request.description())) {
             throw new DescriptionExistsException("The brand %s already exists".formatted(request.description()));
         }
         Brand brand = new Brand(null, request.description());
+        PersonJuridica seller = personJuridicaService.getPersonJuridica();
+        brand.setSeller(seller);
         brandRepository.save(brand);
         return brandMapper.toResponseDTO(brand);
     }

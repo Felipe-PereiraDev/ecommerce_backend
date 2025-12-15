@@ -7,6 +7,7 @@ import br.com.felipedev.ecommerce.exception.DescriptionExistsException;
 import br.com.felipedev.ecommerce.exception.EntityNotFoundException;
 import br.com.felipedev.ecommerce.mapper.CategoryMapper;
 import br.com.felipedev.ecommerce.model.Category;
+import br.com.felipedev.ecommerce.model.PersonJuridica;
 import br.com.felipedev.ecommerce.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,13 +20,17 @@ public class CategoryService {
     private CategoryRepository categoryRepository;
     @Autowired
     private CategoryMapper categoryMapper;
+    @Autowired
+    private PersonJuridicaService personJuridicaService;
 
 
     public CategoryResponseDTO create(CategoryRequestDTO request) {
         if (categoryRepository.existsByDescription(request.description())) {
             throw new DescriptionExistsException("The category %s already exists".formatted(request.description()));
         }
+        PersonJuridica seller = personJuridicaService.getPersonJuridica();
         Category category = new Category(null, request.description());
+        category.setSeller(seller);
         categoryRepository.save(category);
         return categoryMapper.toResponseDTO(category);
     }

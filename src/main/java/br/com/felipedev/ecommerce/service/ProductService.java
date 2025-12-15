@@ -7,6 +7,7 @@ import br.com.felipedev.ecommerce.exception.EntityNotFoundException;
 import br.com.felipedev.ecommerce.mapper.ProductMapper;
 import br.com.felipedev.ecommerce.model.Brand;
 import br.com.felipedev.ecommerce.model.Category;
+import br.com.felipedev.ecommerce.model.PersonJuridica;
 import br.com.felipedev.ecommerce.model.Product;
 import br.com.felipedev.ecommerce.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +30,13 @@ public class ProductService {
     @Autowired
     private ProductMapper productMapper;
 
+    @Autowired
+    private PersonJuridicaService personJuridicaService;
+
     public ProductResponseDTO createProduct(ProductRequestDTO request) {
         var category = categoryService.findById(request.categoryId());
         var brand = brandService.findById(request.brandId());
+        PersonJuridica seller = personJuridicaService.getPersonJuridica();
         Product newProduct = new Product(
                 brand,
                 category,
@@ -45,7 +50,8 @@ public class ProductService {
                 request.unitType(),
                 request.weight(),
                 request.width(),
-                request.youtubeLink()
+                request.youtubeLink(),
+                seller
         );
         productRepository.save(newProduct);
         return productMapper.toResponseDTO(newProduct);

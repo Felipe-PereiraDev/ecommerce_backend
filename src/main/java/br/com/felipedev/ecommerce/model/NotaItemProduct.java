@@ -36,6 +36,10 @@ public class NotaItemProduct {
     @Column(nullable = false)
     private BigDecimal amount;
 
+    @ManyToOne
+    @JoinColumn(name = "seller_id", nullable = false, foreignKey = @ForeignKey(name = "seller_fk", value = ConstraintMode.CONSTRAINT))
+    private PersonJuridica seller;
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof NotaItemProduct that)) return false;

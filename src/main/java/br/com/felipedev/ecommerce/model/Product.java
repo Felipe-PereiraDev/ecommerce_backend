@@ -73,7 +73,12 @@ public class Product {
 
     private Integer clickCount = 0;
 
-    public Product(Brand brand, Category category, Double depth, String description, Double height, String name, BigDecimal price, Integer stockAlertQuantity, Integer stockQuantity, String unitType, Double weight, Double width, String youtubeLink) {
+    @ManyToOne
+    @JoinColumn(name = "seller_id", nullable = false, foreignKey = @ForeignKey(name = "seller_fk", value = ConstraintMode.CONSTRAINT))
+    private PersonJuridica seller;
+
+
+    public Product(Brand brand, Category category, Double depth, String description, Double height, String name, BigDecimal price, Integer stockAlertQuantity, Integer stockQuantity, String unitType, Double weight, Double width, String youtubeLink, PersonJuridica seller) {
         this.brand = brand;
         this.category = category;
         this.depth = depth;
@@ -87,6 +92,7 @@ public class Product {
         this.weight = weight;
         this.width = width;
         this.youtubeLink = youtubeLink;
+        this.seller = seller;
     }
 
     public void update(ProductUpdateDTO request, Brand brand, Category category) {

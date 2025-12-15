@@ -32,8 +32,16 @@ public class Category implements Serializable {
     @OneToMany(mappedBy = "category")
     private List<Product> products = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "seller_id", nullable = false, foreignKey = @ForeignKey(name = "seller_fk", value = ConstraintMode.CONSTRAINT))
+    private PersonJuridica seller;
+
+
+
     public Category(Long id, String description) {
         this.id = id;
         this.description = description;
     }
+
+
 }

@@ -5,6 +5,7 @@ import br.com.felipedev.ecommerce.exception.DuplicateResourceException;
 import br.com.felipedev.ecommerce.mapper.PersonFisicaMapper;
 import br.com.felipedev.ecommerce.model.PersonFisica;
 import br.com.felipedev.ecommerce.repository.PersonFisicaRepository;
+import br.com.felipedev.ecommerce.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +18,11 @@ public class PersonFisicaService {
     @Autowired
     private PersonFisicaMapper personFisicaMapper;
 
+    @Autowired
+    private PersonRepository personRepository;
+
     public PersonFisica createPersonFisica(UserPFRequestDTO request) {
         existsByPhone(request.phone());
-        existsByEmail(request.email());
         existsByCpf(request.cpf());
         PersonFisica newPersonFisica = personFisicaMapper.toEntity(request);
         personFisicaRepository.save(newPersonFisica);
@@ -32,15 +35,10 @@ public class PersonFisicaService {
     }
 
     private void existsByPhone(String phone) {
-        if (personFisicaRepository.existsByPhone(phone)) {
+        if (personRepository.existsByPhone(phone)) {
             throw new DuplicateResourceException("The phone %s already exists".formatted(phone));
         }
     }
 
-    private void existsByEmail(String email) {
-        if (personFisicaRepository.existsByEmail(email)) {
-            throw new DuplicateResourceException("The phone %s already exists".formatted(email));
-        }
-    }
 
 }

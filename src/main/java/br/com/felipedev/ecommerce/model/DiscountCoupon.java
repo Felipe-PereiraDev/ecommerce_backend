@@ -32,6 +32,11 @@ public class DiscountCoupon {
     @Column(name = "due_date", nullable = false)
     private LocalDateTime dueDate;
 
+    @ManyToOne
+    @JoinColumn(name = "seller_id", nullable = true, foreignKey = @ForeignKey(name = "seller_fk", value = ConstraintMode.CONSTRAINT))
+    private PersonJuridica seller;
+
+
     public DiscountCoupon(BigDecimal percentage, LocalDateTime dueDate, BigDecimal discountAmount, String code) {
         this.percentage = percentage;
         this.dueDate = dueDate;

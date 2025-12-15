@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
 @Inheritance(strategy = InheritanceType.JOINED)
 //@DiscriminatorColumn(name = "person_type")
 public abstract class Person {
@@ -27,17 +29,13 @@ public abstract class Person {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "email", nullable = false, length = 100)
-    private String email;
-
     @Column(name = "phone", nullable = false, length = 20)
     private String phone;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses;
 
-    public Person(String email, String name, String phone) {
-        this.email = email;
+    public Person(String name, String phone) {
         this.name = name;
         this.phone = phone;
     }

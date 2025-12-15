@@ -1,6 +1,5 @@
 package br.com.felipedev.ecommerce.config;
 
-import br.com.felipedev.ecommerce.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class JwtServiceConfig {
@@ -20,7 +18,7 @@ public class JwtServiceConfig {
 
     public String generateToken(Authentication authentication) {
         Instant now = Instant.now();
-        long expiry = 3600L;
+        long expiry = 86400L;
 
         List<String> scopes = authentication.getAuthorities()
                 .stream()
@@ -36,4 +34,5 @@ public class JwtServiceConfig {
 
         return encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
+
 }

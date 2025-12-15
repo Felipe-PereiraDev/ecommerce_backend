@@ -69,4 +69,9 @@ public class SalePurchase {
     @OneToMany(mappedBy = "salePurchase", fetch = FetchType.LAZY)
     private List<TrackingStatus> trackingStatusList = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "seller_id", nullable = false, foreignKey = @ForeignKey(name = "seller_fk", value = ConstraintMode.CONSTRAINT))
+    private PersonJuridica seller;
+
+
 }

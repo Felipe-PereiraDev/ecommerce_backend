@@ -55,4 +55,11 @@ public class AccountPayable {
     @JoinColumn(name = "payment_method_id", foreignKey = @ForeignKey(name = "payment_method_fk", value = ConstraintMode.CONSTRAINT), nullable = false)
     private PaymentMethod paymentMethod;
 
+    @ManyToOne
+    @JoinColumn(name = "seller_id", nullable = false, foreignKey = @ForeignKey(name = "seller_fk", value = ConstraintMode.CONSTRAINT))
+    private PersonJuridica seller;
+
+
+
+
 }

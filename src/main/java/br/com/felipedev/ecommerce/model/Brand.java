@@ -37,4 +37,10 @@ public class Brand implements Serializable {
         this.id = id;
         this.description = description;
     }
+
+    @ManyToOne
+    @JoinColumn(name = "seller_id", nullable = false, foreignKey = @ForeignKey(name = "seller_fk", value = ConstraintMode.CONSTRAINT))
+    private PersonJuridica seller;
+
+
 }

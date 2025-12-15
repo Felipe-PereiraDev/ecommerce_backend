@@ -9,7 +9,6 @@ public class PersonFisicaMapper {
 
     public PersonFisica toEntity(UserPFRequestDTO request) {
         return new PersonFisica(
-                request.email(),
                 request.name(),
                 request.phone(),
                 request.cpf(),
