@@ -7,6 +7,7 @@ import br.com.felipedev.ecommerce.exception.DescriptionExistsException;
 import br.com.felipedev.ecommerce.exception.EntityNotFoundException;
 import br.com.felipedev.ecommerce.mapper.CategoryMapper;
 import br.com.felipedev.ecommerce.model.Category;
+import br.com.felipedev.ecommerce.model.PersonJuridica;
 import br.com.felipedev.ecommerce.repository.CategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,9 @@ class CategoryServiceTest {
     @Mock
     CategoryMapper categoryMapper;
 
+    @Mock
+    PersonJuridicaService personJuridicaService;
+
     @InjectMocks
     CategoryService categoryService;
 
@@ -38,11 +42,15 @@ class CategoryServiceTest {
     
     CategoryResponseDTO categoryResponseDTO;
 
+    PersonJuridica personJuridica = new PersonJuridica();
 
     @BeforeEach
     void setUp() {
         category = new Category(1L, "ELECTRONICS");
-        categoryResponseDTO = new CategoryResponseDTO(category.getId(), category.getDescription());
+        personJuridica = new PersonJuridica();
+        personJuridica.setId(1L);
+        personJuridica.setName("admin");
+        categoryResponseDTO = new CategoryResponseDTO(category.getId(), category.getDescription(), personJuridica.getId());
     }
 
     @Test
@@ -51,6 +59,7 @@ class CategoryServiceTest {
         when(categoryRepository.existsByDescription(anyString())).thenReturn(false);
         when(categoryRepository.save(any(Category.class))).thenReturn(category);
         when(categoryMapper.toResponseDTO(any(Category.class))).thenReturn(categoryResponseDTO);
+        when(personJuridicaService.getPersonJuridica()).thenReturn(personJuridica);
 
         var result = categoryService.create(request);
 
@@ -104,10 +113,14 @@ class CategoryServiceTest {
 
     @Test
     void test_findAll_WhenCalled_ShouldReturnCategoryResponseDTOList() {
+        PersonJuridica personJuridica2 = new PersonJuridica();
+        personJuridica2.setId(2L);
+        PersonJuridica personJuridica3 = new PersonJuridica();
+        personJuridica3.setId(3L);
         List<CategoryResponseDTO> categoryResponseList = List.of(
                 categoryResponseDTO,
-                new CategoryResponseDTO(2L, "CLOTHING"),
-                new CategoryResponseDTO(3L, "HOME")
+                new CategoryResponseDTO(2L, "CLOTHING", personJuridica2.getId()),
+                new CategoryResponseDTO(3L, "HOME", personJuridica3.getId())
         );
 
         List<Category> categoryList = List.of(
@@ -127,6 +140,7 @@ class CategoryServiceTest {
             assertNotNull(result);
             assertEquals(categoryResponse.description(), result.description());
             assertEquals(categoryResponse.id(), result.id());
+            assertEquals(categoryResponse.sellerId(), result.sellerId());
         }
         verify(categoryRepository, times(1)).findAll();
         verify(categoryMapper, times(1)).toResponseDTOList(categoryList);
@@ -136,7 +150,7 @@ class CategoryServiceTest {
     @Test
     void test_updateDescription_WhenCategoryIdExists_ShouldReturnUpdatedCategoryResponseDTO() {
         String expectedCategoryName = "CLOTHING";
-        categoryResponseDTO = new CategoryResponseDTO(category.getId(), expectedCategoryName);
+        categoryResponseDTO = new CategoryResponseDTO(category.getId(), expectedCategoryName, null);
         CategoryRequestDTO request = new CategoryRequestDTO("CLOTHING");
 
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));

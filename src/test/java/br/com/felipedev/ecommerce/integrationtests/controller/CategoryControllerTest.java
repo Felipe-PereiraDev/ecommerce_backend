@@ -2,16 +2,11 @@ package br.com.felipedev.ecommerce.integrationtests.controller;
 
 import br.com.felipedev.ecommerce.dto.category.CategoryRequestDTO;
 import br.com.felipedev.ecommerce.dto.category.CategoryResponseDTO;
+import br.com.felipedev.ecommerce.dto.error.ErrorResponse;
 import br.com.felipedev.ecommerce.dto.jwt.TokenResponseDTO;
 import br.com.felipedev.ecommerce.dto.user.UserLogin;
-import br.com.felipedev.ecommerce.enums.RoleType;
-import br.com.felipedev.ecommerce.exception.ErrorResponse;
 import br.com.felipedev.ecommerce.integrationtests.testcontainers.AbstractIntegrationTest;
-import br.com.felipedev.ecommerce.mocks.MockPerson;
 import br.com.felipedev.ecommerce.model.Category;
-import br.com.felipedev.ecommerce.model.PersonJuridica;
-import br.com.felipedev.ecommerce.model.Role;
-import br.com.felipedev.ecommerce.model.User;
 import br.com.felipedev.ecommerce.repository.PersonRepository;
 import br.com.felipedev.ecommerce.repository.UserRepository;
 import br.com.felipedev.ecommerce.service.RoleService;
@@ -32,7 +27,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -68,27 +62,12 @@ class CategoryControllerTest extends AbstractIntegrationTest {
     @BeforeEach
     void setUp() {
         categoryRequestDTO = new CategoryRequestDTO("ELECTRONICS");
-        if (!userRepository.existsByUsername("admin")){
-            // salva um usuário admin no banco de dados
-            PersonJuridica personJuridica = MockPerson.mockPersonJuridica();
-            personRepository.save(personJuridica);
-
-            User userAdmin;
-            userAdmin = new User();
-            Role roleAdmin = roleService.getRole(RoleType.ROLE_ADMIN);
-            userAdmin.setUsername("admin");
-            userAdmin.setPasswordUpdatedAt(LocalDate.now());
-            userAdmin.setPassword(passwordEncoder.encode("admin"));
-            userAdmin.setRoles(List.of(roleAdmin));
-            userAdmin.setPerson(personJuridica);
-            userRepository.save(userAdmin);
-        }
     }
 
     @Order(1)
     @Test
     void loginUser_WithValidData_ShouldReturnReturnToken() throws Exception {
-        UserLogin userLogin = new UserLogin("admin", "admin");
+        UserLogin userLogin = new UserLogin("admin@email.com", "admin123");
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/users/login")
                 .content(objectMapper.writeValueAsString(userLogin))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -147,9 +126,9 @@ class CategoryControllerTest extends AbstractIntegrationTest {
         );
 
         assertNotNull(errorResponse);
-        assertEquals(HttpStatus.CONFLICT.getReasonPhrase(), errorResponse.error());
-        assertEquals(HttpStatus.CONFLICT.value(), errorResponse.status());
-        assertEquals(expectedMessage, errorResponse.message());
+        assertEquals(HttpStatus.CONFLICT.getReasonPhrase(), errorResponse.getError());
+        assertEquals(HttpStatus.CONFLICT.value(), errorResponse.getStatus());
+        assertEquals(expectedMessage, errorResponse.getMessage());
 
     }
 
@@ -227,9 +206,9 @@ class CategoryControllerTest extends AbstractIntegrationTest {
         );
 
         assertNotNull(errorResponse);
-        assertEquals(HttpStatus.CONFLICT.getReasonPhrase(), errorResponse.error());
-        assertEquals(HttpStatus.CONFLICT.value(), errorResponse.status());
-        assertEquals(expectedMessage, errorResponse.message());
+        assertEquals(HttpStatus.CONFLICT.getReasonPhrase(), errorResponse.getError());
+        assertEquals(HttpStatus.CONFLICT.value(), errorResponse.getStatus());
+        assertEquals(expectedMessage, errorResponse.getMessage());
     }
     @Order(7)
     @Test
@@ -256,9 +235,9 @@ class CategoryControllerTest extends AbstractIntegrationTest {
         );
 
         assertNotNull(errorResponse);
-        assertEquals(HttpStatus.NOT_FOUND.getReasonPhrase(), errorResponse.error());
-        assertEquals(HttpStatus.NOT_FOUND.value(), errorResponse.status());
-        assertEquals(expectedMessage, errorResponse.message());
+        assertEquals(HttpStatus.NOT_FOUND.getReasonPhrase(), errorResponse.getError());
+        assertEquals(HttpStatus.NOT_FOUND.value(), errorResponse.getStatus());
+        assertEquals(expectedMessage, errorResponse.getMessage());
     }
 
 
@@ -290,8 +269,8 @@ class CategoryControllerTest extends AbstractIntegrationTest {
         );
 
         assertNotNull(errorResponse);
-        assertEquals(HttpStatus.NOT_FOUND.getReasonPhrase(), errorResponse.error());
-        assertEquals(HttpStatus.NOT_FOUND.value(), errorResponse.status());
-        assertEquals(expectedMessage, errorResponse.message());
+        assertEquals(HttpStatus.NOT_FOUND.getReasonPhrase(), errorResponse.getError());
+        assertEquals(HttpStatus.NOT_FOUND.value(), errorResponse.getStatus());
+        assertEquals(expectedMessage, errorResponse.getMessage());
     }
 }

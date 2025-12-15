@@ -6,6 +6,7 @@ import br.com.felipedev.ecommerce.exception.DescriptionExistsException;
 import br.com.felipedev.ecommerce.exception.EntityNotFoundException;
 import br.com.felipedev.ecommerce.mapper.BrandMapper;
 import br.com.felipedev.ecommerce.model.Brand;
+import br.com.felipedev.ecommerce.model.PersonJuridica;
 import br.com.felipedev.ecommerce.repository.BrandRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,25 +31,33 @@ class BrandServiceTest {
     @Mock
     BrandMapper brandMapper;
 
+    @Mock
+    private PersonJuridicaService personJuridicaService;
+
     @InjectMocks
     BrandService brandService;
 
     Brand brand;
     BrandResponseDTO brandResponseDTO;
-
+    PersonJuridica personJuridica;
 
     @BeforeEach
     void setUp() {
         brand = new Brand(1L, "ADIDAS");
-        brandResponseDTO = new BrandResponseDTO(brand.getId(), brand.getDescription());
+        personJuridica = new PersonJuridica();
+        personJuridica.setId(1L);
+        personJuridica.setName("admin");
+        brandResponseDTO = new BrandResponseDTO(brand.getId(), brand.getDescription(), personJuridica.getId());
     }
 
     @Test
     void test_create_WhenBrandDoesNotExist_ShouldCreateBrand() {
+        brand.setSeller(personJuridica);
         BrandRequestDTO request = new BrandRequestDTO("ADIDAS");
         when(brandRepository.existsByDescription(anyString())).thenReturn(false);
         when(brandRepository.save(any(Brand.class))).thenReturn(brand);
         when(brandMapper.toResponseDTO(any(Brand.class))).thenReturn(brandResponseDTO);
+        when(personJuridicaService.getPersonJuridica()).thenReturn(personJuridica);
 
         var result = brandService.create(request);
 
@@ -55,6 +65,7 @@ class BrandServiceTest {
                 () -> String.format("O Resultado esperado era %d, mas veio %d", brand.getId(), result.id()));
         assertEquals(brand.getDescription(), result.description(),
                 () -> String.format("O Resultado esperado era %s, mas veio %s", brand.getDescription(), result.description()));
+        assertEquals(brand.getSeller().getId(), result.sellerId());
     }
 
     @Test
@@ -101,10 +112,14 @@ class BrandServiceTest {
 
     @Test
     void test_findAll_WhenCalled_ShouldReturnBrandResponseDTOList() {
+        PersonJuridica pj2 = new PersonJuridica();
+        pj2.setId(2L);
+        PersonJuridica pj3 = new PersonJuridica();
+        pj3.setId(3L);
         List<BrandResponseDTO> brandResponseList = List.of(
                 brandResponseDTO,
-                new BrandResponseDTO(2L, "NIKE"),
-                new BrandResponseDTO(3L, "NESTLE")
+                new BrandResponseDTO(2L, "NIKE", pj2.getId()),
+                new BrandResponseDTO(3L, "NESTLE", pj3.getId())
         );
 
         List<Brand> brandList = List.of(
@@ -124,6 +139,7 @@ class BrandServiceTest {
             assertNotNull(result);
             assertEquals(brandResponse.description(), result.description());
             assertEquals(brandResponse.id(), result.id());
+            assertEquals(brandResponse.sellerId(), result.sellerId());
         }
         verify(brandRepository, times(1)).findAll();
         verify(brandMapper, times(1)).toResponseDTOList(brandList);
@@ -133,11 +149,12 @@ class BrandServiceTest {
     @Test
     void test_updateDescription_WhenBrandIdExists_ShouldReturnUpdatedBrandResponseDTO() {
         String expectedBrandName = "NIKE";
-        brandResponseDTO = new BrandResponseDTO(brand.getId(), expectedBrandName);
+        brandResponseDTO = new BrandResponseDTO(brand.getId(), expectedBrandName,  personJuridica.getId());
         BrandRequestDTO request = new BrandRequestDTO("NIKE");
 
         when(brandRepository.findById(1L)).thenReturn(Optional.of(brand));
         when(brandRepository.existsByDescription(anyString())).thenReturn(false);
+        when(brandRepository.save(any(Brand.class))).thenReturn(brand);
         when(brandMapper.toResponseDTO(any(Brand.class))).thenReturn(brandResponseDTO);
 
         BrandResponseDTO result = brandService.updateDescription(1L, request);
@@ -148,6 +165,7 @@ class BrandServiceTest {
         verify(brandRepository, times(1)).findById(1L);
         verify(brandRepository, times(1)).existsByDescription(expectedBrandName);
         verify(brandMapper, times(1)).toResponseDTO(brand);
+        verify(brandRepository, times(1)).save(brand);
     }
 
     @Test

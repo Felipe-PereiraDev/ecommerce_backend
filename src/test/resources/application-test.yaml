@@ -4,8 +4,18 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    properties:
-    show-sql: false
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: ALWAYS
+
+  transaction:
+    rollback-on-commit-failure: true
+
   flyway:
     enabled: false
+
+jwt:
+  private-key-path: classpath:keys/private.pem
+  public-key-path: classpath:keys/public.pem
 
