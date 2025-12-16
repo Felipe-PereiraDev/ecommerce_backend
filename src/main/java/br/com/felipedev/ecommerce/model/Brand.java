@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "brand", uniqueConstraints = @UniqueConstraint(name = "brand_description_uk", columnNames = {"description"}))
+@Table(name = "brand", uniqueConstraints = @UniqueConstraint(name = "brand_description_uk", columnNames = {"description", "seller_id"}))
 @Getter
 @Setter
 @NoArgsConstructor

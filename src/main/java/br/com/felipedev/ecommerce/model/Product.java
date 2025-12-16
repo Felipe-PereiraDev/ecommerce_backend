@@ -8,12 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-//@Table(name = "products", uniqueConstraIntegers = {@UniqueConstraInteger(columnNames = {"seller_id ", "name"})})
-@Table(name = "product")
+@Table(name = "product", uniqueConstraints = @UniqueConstraint(name = "product_name_uk", columnNames = {"seller_id ", "name"}))
 @Getter
 @Setter
 @AllArgsConstructor

@@ -1,6 +1,10 @@
 package br.com.felipedev.ecommerce.mapper;
 
+import br.com.felipedev.ecommerce.dto.product.ProductRequestDTO;
 import br.com.felipedev.ecommerce.dto.product.ProductResponseDTO;
+import br.com.felipedev.ecommerce.model.Brand;
+import br.com.felipedev.ecommerce.model.Category;
+import br.com.felipedev.ecommerce.model.PersonJuridica;
 import br.com.felipedev.ecommerce.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,6 +35,25 @@ public class ProductMapper {
                 product.getYoutubeLink(),
                 brandMapper.toResponseDTO(product.getBrand()),
                 categoryMapper.toResponseDTO(product.getCategory())
+        );
+    }
+
+    public Product toEntity(ProductRequestDTO request, PersonJuridica seller, Brand brand, Category category) {
+        return new Product(
+                brand,
+                category,
+                request.depth(),
+                request.description(),
+                request.height(),
+                request.name(),
+                request.price(),
+                request.stockAlertQuantity(),
+                request.stockQuantity(),
+                request.unitType(),
+                request.weight(),
+                request.width(),
+                request.youtubeLink(),
+                seller
         );
     }
 

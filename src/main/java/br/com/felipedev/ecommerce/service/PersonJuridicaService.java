@@ -4,9 +4,7 @@ import br.com.felipedev.ecommerce.config.SecurityService;
 import br.com.felipedev.ecommerce.dto.user.UserPJRequestDTO;
 import br.com.felipedev.ecommerce.exception.DuplicateResourceException;
 import br.com.felipedev.ecommerce.mapper.PersonJuridicaMapper;
-import br.com.felipedev.ecommerce.model.Person;
-import br.com.felipedev.ecommerce.model.PersonJuridica;
-import br.com.felipedev.ecommerce.model.User;
+import br.com.felipedev.ecommerce.model.*;
 import br.com.felipedev.ecommerce.repository.PersonJuridicaRepository;
 import br.com.felipedev.ecommerce.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,17 +45,26 @@ public class PersonJuridicaService {
         }
     }
 
-    public PersonJuridica getPersonJuridica() {
+    public PersonJuridica getAuthenticatedPersonJuridica() {
         User user = securityService.getAuthenticatedUser();
         Person person = user.getPerson();
 
         if (person == null) {
-            throw new AccessDeniedException("Usuário não possui pessoa associada");
+            throw new AccessDeniedException("User entity has no linked person");
         }
 
         if (!(person instanceof PersonJuridica)) {
-            throw new AccessDeniedException("Você não tem permissão pra acessar este recurso");
+            throw new AccessDeniedException("You do not have permission to access this resource");
         }
         return (PersonJuridica) person;
+    }
+
+    public boolean hasSellerOwnership(Long expectedSellerId, Long actualSellerId) {
+        return expectedSellerId.equals(actualSellerId);
+    }
+
+    public boolean hasSellerOwnership(PersonJuridica seller, Brand brand, Category category) {
+        return seller.getId().equals(brand.getSeller().getId())
+                && seller.getId().equals(category.getSeller().getId());
     }
 }

@@ -4,11 +4,13 @@ import br.com.felipedev.ecommerce.dto.brand.BrandRequestDTO;
 import br.com.felipedev.ecommerce.dto.brand.BrandResponseDTO;
 import br.com.felipedev.ecommerce.exception.DescriptionExistsException;
 import br.com.felipedev.ecommerce.exception.EntityNotFoundException;
+import br.com.felipedev.ecommerce.exception.UnprocessableEntityException;
 import br.com.felipedev.ecommerce.mapper.BrandMapper;
 import br.com.felipedev.ecommerce.model.Brand;
 import br.com.felipedev.ecommerce.model.PersonJuridica;
 import br.com.felipedev.ecommerce.repository.BrandRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,11 +25,13 @@ public class BrandService {
     private PersonJuridicaService personJuridicaService;
 
     public BrandResponseDTO create(BrandRequestDTO request) {
-        if (brandRepository.existsByDescription(request.description())) {
+        PersonJuridica seller = personJuridicaService.getAuthenticatedPersonJuridica();
+
+        if (brandRepository.existsByDescriptionAndSellerId(request.description(), seller.getId())) {
             throw new DescriptionExistsException("The brand %s already exists".formatted(request.description()));
         }
+
         Brand brand = new Brand(null, request.description());
-        PersonJuridica seller = personJuridicaService.getPersonJuridica();
         brand.setSeller(seller);
         brandRepository.save(brand);
         return brandMapper.toResponseDTO(brand);
@@ -43,10 +47,17 @@ public class BrandService {
     }
 
     public BrandResponseDTO updateDescription(Long id, BrandRequestDTO request) {
+        PersonJuridica seller = personJuridicaService.getAuthenticatedPersonJuridica();
         Brand brand = findById(id);
-        if (brandRepository.existsByDescription(request.description())) {
+
+        if (!personJuridicaService.hasSellerOwnership(seller.getId(), brand.getSeller().getId())) {
+            throw new AccessDeniedException("You do not have permission to access this resource");
+        }
+
+        if (brandRepository.existsByDescriptionAndSellerId(request.description(), seller.getId())) {
             throw new DescriptionExistsException("The brand %s already exists".formatted(request.description()));
         }
+
         brand.setDescription(request.description());
         brandRepository.save(brand);
         return brandMapper.toResponseDTO(brand);
@@ -54,7 +65,15 @@ public class BrandService {
 
 
     public void deleteById(Long id) {
+        PersonJuridica seller = personJuridicaService.getAuthenticatedPersonJuridica();
         Brand brand = findById(id);
+        if (!personJuridicaService.hasSellerOwnership(seller.getId(), brand.getSeller().getId())) {
+            throw new AccessDeniedException("You do not have permission to access this resource");
+        }
+
+        if (brandRepository.hasProductsAssociated(id)) {
+            throw new UnprocessableEntityException("Cannot delete the brand with ID %d".formatted(id));
+        }
         brandRepository.delete(brand);
     }
 }

@@ -36,6 +36,11 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.UNAUTHORIZED, ex, servletRequest);
     }
 
+    @ExceptionHandler(UnprocessableEntityException.class)
+    public ResponseEntity<ErrorResponse> handleUnprocessableEntityException (Exception ex, HttpServletRequest servletRequest) {
+        return buildErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex, servletRequest);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException (MethodArgumentNotValidException ex, HttpServletRequest servletRequest) {
         ApiError apiError = new ApiError(
