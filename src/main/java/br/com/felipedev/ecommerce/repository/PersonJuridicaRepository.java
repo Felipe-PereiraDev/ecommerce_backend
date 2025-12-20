@@ -10,5 +10,4 @@ public interface PersonJuridicaRepository extends JpaRepository<PersonJuridica, 
 
     boolean existsByCnpj(String cpf);
 
-    boolean existsByPhone(String phone);
 }

@@ -14,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
@@ -54,10 +53,10 @@ class BrandServiceTest {
     void test_create_WhenBrandDoesNotExist_ShouldCreateBrand() {
         brand.setSeller(personJuridica);
         BrandRequestDTO request = new BrandRequestDTO("ADIDAS");
-        when(brandRepository.existsByDescription(anyString())).thenReturn(false);
+        when(brandRepository.existsByDescriptionAndSellerId(anyString())).thenReturn(false);
         when(brandRepository.save(any(Brand.class))).thenReturn(brand);
         when(brandMapper.toResponseDTO(any(Brand.class))).thenReturn(brandResponseDTO);
-        when(personJuridicaService.getPersonJuridica()).thenReturn(personJuridica);
+        when(personJuridicaService.getAuthenticatedPersonJuridica()).thenReturn(personJuridica);
 
         var result = brandService.create(request);
 
@@ -73,7 +72,7 @@ class BrandServiceTest {
         BrandRequestDTO request = new BrandRequestDTO("ADIDAS");
         String expectedMessage = String.format("The brand %s already exists", request.description());
 
-        when(brandRepository.existsByDescription(anyString())).thenReturn(true);
+        when(brandRepository.existsByDescriptionAndSellerId(anyString())).thenReturn(true);
 
         Exception result = assertThrowsExactly(DescriptionExistsException.class,
                 () -> brandService.create(request));
@@ -153,7 +152,7 @@ class BrandServiceTest {
         BrandRequestDTO request = new BrandRequestDTO("NIKE");
 
         when(brandRepository.findById(1L)).thenReturn(Optional.of(brand));
-        when(brandRepository.existsByDescription(anyString())).thenReturn(false);
+        when(brandRepository.existsByDescriptionAndSellerId(anyString())).thenReturn(false);
         when(brandRepository.save(any(Brand.class))).thenReturn(brand);
         when(brandMapper.toResponseDTO(any(Brand.class))).thenReturn(brandResponseDTO);
 
@@ -163,7 +162,7 @@ class BrandServiceTest {
         assertEquals(brand.getId(), result.id());
         assertEquals(expectedBrandName, result.description());
         verify(brandRepository, times(1)).findById(1L);
-        verify(brandRepository, times(1)).existsByDescription(expectedBrandName);
+        verify(brandRepository, times(1)).existsByDescriptionAndSellerId(expectedBrandName);
         verify(brandMapper, times(1)).toResponseDTO(brand);
         verify(brandRepository, times(1)).save(brand);
     }
@@ -188,7 +187,7 @@ class BrandServiceTest {
         BrandRequestDTO request = new BrandRequestDTO("NIKE");
         String expectedMessage = String.format("The brand %s already exists", request.description());
         when(brandRepository.findById(expectedId)).thenReturn(Optional.of(brand));
-        when(brandRepository.existsByDescription(anyString())).thenReturn(true);
+        when(brandRepository.existsByDescriptionAndSellerId(anyString())).thenReturn(true);
 
         Exception result = assertThrowsExactly(DescriptionExistsException.class,
                 () -> brandService.updateDescription(expectedId, request));

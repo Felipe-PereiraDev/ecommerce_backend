@@ -1,13 +1,10 @@
 package br.com.felipedev.ecommerce.config;
 
-import br.com.felipedev.ecommerce.model.User;
 import br.com.felipedev.ecommerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
@@ -17,16 +14,13 @@ public class SecurityService {
     private UserRepository userRepository;
 
 
-    public User getAuthenticatedUser() {
+    public Jwt getTokenAuthenticatedUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth == null || !auth.isAuthenticated()) {
             throw new AuthenticationCredentialsNotFoundException("Usuário não autenticado");
         }
-        Jwt jwt = (Jwt) auth.getPrincipal();
-        String email = jwt.getSubject();
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return (Jwt) auth.getPrincipal();
     }
 
 }

@@ -26,14 +26,15 @@ public class CategoryService {
     private PersonJuridicaService personJuridicaService;
 
     public CategoryResponseDTO create(CategoryRequestDTO request) {
-        PersonJuridica seller = personJuridicaService.getAuthenticatedPersonJuridica();
+        Long selleIdId = personJuridicaService.getIdAuthenticatedPersonJuridica();
+        PersonJuridica selleId = personJuridicaService.findById(selleIdId);
 
-        if (categoryRepository.existsByDescriptionAndSellerId(request.description(), seller.getId())) {
+        if (categoryRepository.existsByDescriptionAndSellerId(request.description(), selleIdId)) {
             throw new DescriptionExistsException("The category %s already exists".formatted(request.description()));
         }
 
         Category category = new Category(null, request.description());
-        category.setSeller(seller);
+        category.setSeller(selleId);
         categoryRepository.save(category);
         return categoryMapper.toResponseDTO(category);
     }
@@ -48,13 +49,13 @@ public class CategoryService {
     }
 
     public CategoryResponseDTO updateDescription(Long id, CategoryRequestDTO request) {
-        PersonJuridica seller = personJuridicaService.getAuthenticatedPersonJuridica();
+        Long selleId = personJuridicaService.getIdAuthenticatedPersonJuridica();
         Category category = findById(id);
-        if (!personJuridicaService.hasSellerOwnership(seller.getId(), category.getSeller().getId())) {
+        if (!personJuridicaService.hasSellerOwnership(selleId, category.getSeller().getId())) {
             throw new AccessDeniedException("You do not have permission to access this resource");
         }
 
-        if (categoryRepository.existsByDescriptionAndSellerId(request.description(), seller.getId())) {
+        if (categoryRepository.existsByDescriptionAndSellerId(request.description(), selleId)) {
             throw new DescriptionExistsException("The category %s already exists".formatted(request.description()));
         }
 
@@ -65,10 +66,10 @@ public class CategoryService {
 
 
     public void deleteById(Long id) {
-        PersonJuridica seller = personJuridicaService.getAuthenticatedPersonJuridica();
+        Long selleId = personJuridicaService.getIdAuthenticatedPersonJuridica();
         Category category = findById(id);
 
-        if (!personJuridicaService.hasSellerOwnership(seller.getId(), category.getSeller().getId())) {
+        if (!personJuridicaService.hasSellerOwnership(selleId, category.getSeller().getId())) {
             throw new AccessDeniedException("You do not have permission to access this resource");
         }
 

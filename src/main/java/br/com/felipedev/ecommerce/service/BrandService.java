@@ -25,9 +25,10 @@ public class BrandService {
     private PersonJuridicaService personJuridicaService;
 
     public BrandResponseDTO create(BrandRequestDTO request) {
-        PersonJuridica seller = personJuridicaService.getAuthenticatedPersonJuridica();
+        Long sellerId = personJuridicaService.getIdAuthenticatedPersonJuridica();
+        PersonJuridica seller = personJuridicaService.findById(sellerId);
 
-        if (brandRepository.existsByDescriptionAndSellerId(request.description(), seller.getId())) {
+        if (brandRepository.existsByDescriptionAndSellerId(request.description(), sellerId)) {
             throw new DescriptionExistsException("The brand %s already exists".formatted(request.description()));
         }
 
@@ -47,14 +48,14 @@ public class BrandService {
     }
 
     public BrandResponseDTO updateDescription(Long id, BrandRequestDTO request) {
-        PersonJuridica seller = personJuridicaService.getAuthenticatedPersonJuridica();
+        Long sellerId = personJuridicaService.getIdAuthenticatedPersonJuridica();
         Brand brand = findById(id);
 
-        if (!personJuridicaService.hasSellerOwnership(seller.getId(), brand.getSeller().getId())) {
+        if (!personJuridicaService.hasSellerOwnership(sellerId, brand.getSeller().getId())) {
             throw new AccessDeniedException("You do not have permission to access this resource");
         }
 
-        if (brandRepository.existsByDescriptionAndSellerId(request.description(), seller.getId())) {
+        if (brandRepository.existsByDescriptionAndSellerId(request.description(), sellerId)) {
             throw new DescriptionExistsException("The brand %s already exists".formatted(request.description()));
         }
 
@@ -65,9 +66,9 @@ public class BrandService {
 
 
     public void deleteById(Long id) {
-        PersonJuridica seller = personJuridicaService.getAuthenticatedPersonJuridica();
+        Long sellerId = personJuridicaService.getIdAuthenticatedPersonJuridica();
         Brand brand = findById(id);
-        if (!personJuridicaService.hasSellerOwnership(seller.getId(), brand.getSeller().getId())) {
+        if (!personJuridicaService.hasSellerOwnership(sellerId, brand.getSeller().getId())) {
             throw new AccessDeniedException("You do not have permission to access this resource");
         }
 

@@ -1,5 +1,6 @@
 package br.com.felipedev.ecommerce.config;
 
+import br.com.felipedev.ecommerce.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,6 +21,9 @@ public class JwtServiceConfig {
         Instant now = Instant.now();
         long expiry = 86400L;
 
+        User user = (User) authentication.getPrincipal();
+        Long userId = user.getPerson().getId();
+
         List<String> scopes = authentication.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
@@ -29,6 +33,7 @@ public class JwtServiceConfig {
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expiry))
                 .subject(authentication.getName())
+                .claim("personId", userId)
                 .claim("roles", scopes)
                 .build();
 

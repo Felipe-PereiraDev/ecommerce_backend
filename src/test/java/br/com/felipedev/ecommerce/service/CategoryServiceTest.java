@@ -56,10 +56,10 @@ class CategoryServiceTest {
     @Test
     void test_create_WhenCategoryDoesNotExist_ShouldCreateCategory() {
         CategoryRequestDTO request = new CategoryRequestDTO("ELECTRONICS");
-        when(categoryRepository.existsByDescription(anyString())).thenReturn(false);
+        when(categoryRepository.existsByDescriptionAndSellerId(anyString())).thenReturn(false);
         when(categoryRepository.save(any(Category.class))).thenReturn(category);
         when(categoryMapper.toResponseDTO(any(Category.class))).thenReturn(categoryResponseDTO);
-        when(personJuridicaService.getPersonJuridica()).thenReturn(personJuridica);
+        when(personJuridicaService.getAuthenticatedPersonJuridica()).thenReturn(personJuridica);
 
         var result = categoryService.create(request);
 
@@ -74,7 +74,7 @@ class CategoryServiceTest {
         CategoryRequestDTO request = new CategoryRequestDTO("ELECTRONICS");
         String expectedMessage = String.format("The category %s already exists", request.description());
 
-        when(categoryRepository.existsByDescription(anyString())).thenReturn(true);
+        when(categoryRepository.existsByDescriptionAndSellerId(anyString())).thenReturn(true);
 
         Exception result = assertThrowsExactly(DescriptionExistsException.class,
                 () -> categoryService.create(request));
@@ -154,7 +154,7 @@ class CategoryServiceTest {
         CategoryRequestDTO request = new CategoryRequestDTO("CLOTHING");
 
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
-        when(categoryRepository.existsByDescription(anyString())).thenReturn(false);
+        when(categoryRepository.existsByDescriptionAndSellerId(anyString())).thenReturn(false);
         when(categoryMapper.toResponseDTO(any(Category.class))).thenReturn(categoryResponseDTO);
 
         CategoryResponseDTO result = categoryService.updateDescription(1L, request);
@@ -163,7 +163,7 @@ class CategoryServiceTest {
         assertEquals(category.getId(), result.id());
         assertEquals(expectedCategoryName, result.description());
         verify(categoryRepository, times(1)).findById(1L);
-        verify(categoryRepository, times(1)).existsByDescription(expectedCategoryName);
+        verify(categoryRepository, times(1)).existsByDescriptionAndSellerId(expectedCategoryName);
         verify(categoryMapper, times(1)).toResponseDTO(category);
     }
 
@@ -187,7 +187,7 @@ class CategoryServiceTest {
         CategoryRequestDTO request = new CategoryRequestDTO("CLOTHING");
         String expectedMessage = String.format("The category %s already exists", request.description());
         when(categoryRepository.findById(expectedId)).thenReturn(Optional.of(category));
-        when(categoryRepository.existsByDescription(anyString())).thenReturn(true);
+        when(categoryRepository.existsByDescriptionAndSellerId(anyString())).thenReturn(true);
 
         Exception result = assertThrowsExactly(DescriptionExistsException.class,
                 () -> categoryService.updateDescription(expectedId, request));

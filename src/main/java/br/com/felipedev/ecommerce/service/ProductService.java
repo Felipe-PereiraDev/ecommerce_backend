@@ -41,17 +41,18 @@ public class ProductService {
 
     @Transactional
     public ProductResponseDTO createProduct(ProductRequestDTO request) {
-        PersonJuridica seller = personJuridicaService.getAuthenticatedPersonJuridica();
+        Long sellerId = personJuridicaService.getIdAuthenticatedPersonJuridica();
+        PersonJuridica seller = personJuridicaService.findById(sellerId);
 
         var category = categoryService.findById(request.categoryId());
         var brand = brandService.findById(request.brandId());
 
-        if (!personJuridicaService.hasSellerOwnership(seller, brand, category)) {
+        if (!personJuridicaService.hasSellerOwnership(sellerId, brand, category)) {
             throw new AccessDeniedException("You do not have permission to access this resource");
         }
 
-        if (productRepository.existsByNameAndSellerId(request.name(), seller.getId())){
-            throw new DuplicateResourceException("The product with name %s already exists".formatted(request.description()));
+        if (productRepository.existsByNameAndSellerId(request.name(), sellerId)){
+            throw new DuplicateResourceException("The product with name %s already exists".formatted(request.name()));
         }
 
         Product newProduct = productMapper.toEntity(request, seller, brand, category);
@@ -67,20 +68,20 @@ public class ProductService {
 
     @Transactional
     public ProductResponseDTO updateProduct(Long id, ProductUpdateDTO request) {
-        PersonJuridica seller = personJuridicaService.getAuthenticatedPersonJuridica();
+        Long selleId = personJuridicaService.getIdAuthenticatedPersonJuridica();
         Product product = findById(id);
-        verifySellerOwnership(seller.getId(), product.getSeller().getId());
+        verifySellerOwnership(selleId, product.getSeller().getId());
 
         Brand brand = null;
         Category category = null;
 
         if (request.brandId() != null && !request.brandId().equals(product.getBrand().getId())) {
             brand = brandService.findById(request.brandId());
-            verifySellerOwnership(seller.getId(), brand.getSeller().getId());
+            verifySellerOwnership(selleId, brand.getSeller().getId());
         }
         if (request.categoryId() != null && !request.categoryId().equals(product.getCategory().getId())) {
-            category = categoryService.findById(request.brandId());
-            verifySellerOwnership(seller.getId(), category.getSeller().getId());
+            category = categoryService.findById(request.categoryId());
+             verifySellerOwnership(selleId, category.getSeller().getId());
         }
 
         product.update(request, brand, category);
@@ -94,19 +95,19 @@ public class ProductService {
     }
 
     public void deleteById(Long id) {
-        PersonJuridica seller = personJuridicaService.getAuthenticatedPersonJuridica();
+        Long sellerId = personJuridicaService.getIdAuthenticatedPersonJuridica();
         Product product = findById(id);
 
-        verifySellerOwnership(seller.getId(), product.getSeller().getId());
+        verifySellerOwnership(sellerId, product.getSeller().getId());
         productRepository.delete(product);
         productRepository.deactivateProduct(id);
     }
 
     public void deactivateById(Long id) {
-        PersonJuridica seller = personJuridicaService.getAuthenticatedPersonJuridica();
+        Long seller = personJuridicaService.getIdAuthenticatedPersonJuridica();
         Product product = findById(id);
 
-        verifySellerOwnership(seller.getId(), product.getSeller().getId());
+        verifySellerOwnership(seller, product.getSeller().getId());
         if (product.getActive().equals(false)) {
             throw new UnprocessableEntityException("Product with id %d is already deactivated".formatted(id));
         }
