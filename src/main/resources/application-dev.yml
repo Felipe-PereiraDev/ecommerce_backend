@@ -2,7 +2,7 @@ spring:
   application:
     name: ecommerce
   datasource:
-    url: jdbc:postgresql://localhost:5433/ecommerce_test
+    url: jdbc:postgresql://localhost:5432/ecommerce
     username: admin
     password: admin
     driver-class-name: org.postgresql.Driver
@@ -38,7 +38,7 @@ spring:
     rollback-on-commit-failure: true
 
   flyway:
-    enabled: false
+    enabled: true
     baseline-on-migrate: false
 
   mail:

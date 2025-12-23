@@ -1,10 +1,10 @@
 services:
   postgresql:
-    container_name: 'postgresql_test'
+    container_name: 'postgresql'
     image: 'postgres:15'
     environment:
-      - 'POSTGRES_DB=ecommerce_test'
+      - 'POSTGRES_DB=ecommerce'
       - 'POSTGRES_PASSWORD=admin'
       - 'POSTGRES_USER=admin'
     ports:
-      - '5433:5432'
+      - '5432:5432'
