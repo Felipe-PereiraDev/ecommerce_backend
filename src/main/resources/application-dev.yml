@@ -41,6 +41,17 @@ spring:
     enabled: false
     baseline-on-migrate: false
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${APP_EMAIL}
+    password: ${APP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 server:
   servlet:
@@ -61,7 +72,3 @@ server:
 jwt:
   private-key-path: classpath:keys/private.pem
   public-key-path: classpath:keys/public.pem
-
-
-#  jwt.private.key=classpath:privatekey.pem
-#  jwt.public.key=classpath:publickey.pem

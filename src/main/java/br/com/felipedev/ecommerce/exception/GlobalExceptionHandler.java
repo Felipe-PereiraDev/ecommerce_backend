@@ -41,6 +41,27 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex, servletRequest);
     }
 
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<ErrorResponse> handleTokenExpiredException (Exception ex, HttpServletRequest servletRequest) {
+        return buildErrorResponse(HttpStatus.GONE, ex, servletRequest);
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ErrorResponse> handleConflictException(Exception ex, HttpServletRequest servletRequest) {
+        return buildErrorResponse(HttpStatus.CONFLICT, ex, servletRequest);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorResponse> handleBadRequestException(Exception ex, HttpServletRequest servletRequest) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex, servletRequest);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ErrorResponse> handleForbiddenException(Exception ex, HttpServletRequest servletRequest) {
+        return buildErrorResponse(HttpStatus.FORBIDDEN, ex, servletRequest);
+    }
+
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException (MethodArgumentNotValidException ex, HttpServletRequest servletRequest) {
         ApiError apiError = new ApiError(

@@ -38,7 +38,6 @@ public class DataLoader implements CommandLineRunner {
                 .orElseGet(() -> roleRepository.save(new Role(null, RoleType.ROLE_USER)));
         roleRepository.findByRole(RoleType.ROLE_SELLER)
                 .orElseGet(() -> roleRepository.save(new Role(null, RoleType.ROLE_SELLER)));
-        System.out.println(passwordEncoder.encode("admin123"));
 //        if (!userRepository.existsByUsername("admin")) {
 //            Role roleAdmin = roleRepository.findByRole(RoleType.ROLE_ADMIN).orElseThrow();
 //

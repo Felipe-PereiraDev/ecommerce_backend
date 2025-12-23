@@ -1,10 +1,12 @@
 package br.com.felipedev.ecommerce.model;
 
+import br.com.felipedev.ecommerce.enums.UserStatusEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.cglib.core.Local;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -35,6 +37,10 @@ public class User implements UserDetails {
     @Temporal(TemporalType.DATE)
     private LocalDate passwordUpdatedAt;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserStatusEnum status;
+
 //    private Person person;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -62,6 +68,15 @@ public class User implements UserDetails {
     @ManyToOne
     @JoinColumn(name = "person_id", nullable = false,foreignKey = @ForeignKey(name = "person_fk", value = ConstraintMode.CONSTRAINT))
     private Person person;
+
+    public User(String email, String password, Person person, List<Role> roles) {
+        this.email = email;
+        this.password = password;
+        this.person = person;
+        this.roles = roles;
+        this.status = UserStatusEnum.PENDING;
+        this.passwordUpdatedAt = LocalDate.now();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -94,6 +109,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return status == UserStatusEnum.ACTIVE;
     }
+
 }
