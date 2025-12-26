@@ -52,7 +52,7 @@ public class UserController {
         return ResponseEntity.ok(userService.authentication(userLogin));
     }
 
-    @PostMapping(value = "/verify-token")
+    @GetMapping(value = "/verify-token")
     public ResponseEntity<?> verifyToken(@RequestParam(name = "token") String token) {
         userVerifierService.validateVerificationToken(token);
         return ResponseEntity.ok().body("EMAIL VALIDADO COM SUCESSO");

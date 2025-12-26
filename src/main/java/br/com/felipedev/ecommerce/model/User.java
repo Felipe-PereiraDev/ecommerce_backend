@@ -33,7 +33,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(name = "password_updated_at", nullable = false)
     @Temporal(TemporalType.DATE)
     private LocalDate passwordUpdatedAt;
 

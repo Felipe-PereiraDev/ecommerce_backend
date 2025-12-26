@@ -1,5 +1,6 @@
 package br.com.felipedev.ecommerce.service;
 
+import br.com.felipedev.ecommerce.email.templates.EmailHtmlTemplates;
 import br.com.felipedev.ecommerce.enums.UserStatusEnum;
 import br.com.felipedev.ecommerce.exception.BadRequestException;
 import br.com.felipedev.ecommerce.exception.ConflictException;
@@ -38,7 +39,9 @@ public class UserVerifierService {
 
         UserVerifier userVerifier = new UserVerifier(token, user);
         userVerifierRepository.save(userVerifier);
-        emailService.sendToken(user, fullUrl);
+        String subject = "Verificação de Conta";
+        String content = EmailHtmlTemplates.buildAccountVerificationEmailHtml(user.getPerson().getName(), fullUrl);
+        emailService.sendEmail(user.getEmail(), subject, content);
     }
 
     public void validateVerificationToken(String token) {

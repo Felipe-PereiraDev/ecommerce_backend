@@ -1,6 +1,5 @@
 package br.com.felipedev.ecommerce.service;
 
-import br.com.felipedev.ecommerce.model.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,21 +15,16 @@ public class EmailService {
     private JavaMailSender mailSender;
 
     @Async
-    public void sendToken(User user, String fullUrl) {
+    public void sendEmail(String to, String subject, String content) {
         try {
-            String from = user.getEmail();
-            String subject = "Verificação de Email";
             MimeMessage message = mailSender.createMimeMessage();
-
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
-            helper.setTo(from);
+            helper.setTo(to);
             helper.setSubject(subject);
-            helper.setText(fullUrl, false);
-            helper.setFrom("noreply@suaapp.com");
+            helper.setText(content, true);
+            helper.setFrom("noreply@email.com");
 
             mailSender.send(message);
-
         } catch (MessagingException e) {
             throw new RuntimeException("Erro ao enviar e-mail", e);
         }
