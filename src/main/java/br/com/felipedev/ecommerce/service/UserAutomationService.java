@@ -16,8 +16,7 @@ public class UserAutomationService {
     private final EmailService emailService;
     private final UserService userService;
 
-//    @Scheduled(cron = "* * 11 * * *")
-    @Scheduled(initialDelay = 10000, fixedDelay = 50000, zone = "America/Sao_Paulo")
+    @Scheduled(cron = "* * 11 * * *", zone = "America/Sao_Paulo")
     public void notifyUsersAboutPasswordExpiration() {
         List<User> userList = userService.getUsersWithExpiredPasswords();
         for (User user : userList) {

@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationCredentialsNotF
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,10 +18,10 @@ public class SecurityService {
     public Jwt getTokenAuthenticatedUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        if (auth == null || !auth.isAuthenticated()) {
+        if (!(auth instanceof JwtAuthenticationToken jwtAuth)) {
             throw new AuthenticationCredentialsNotFoundException("Usuário não autenticado");
         }
-        return (Jwt) auth.getPrincipal();
+        return jwtAuth.getToken();
     }
 
 }

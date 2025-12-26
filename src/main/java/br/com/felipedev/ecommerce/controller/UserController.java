@@ -58,5 +58,11 @@ public class UserController {
         return ResponseEntity.ok().body("EMAIL VALIDADO COM SUCESSO");
     }
 
+    @PatchMapping("/password")
+    public ResponseEntity<Void> changePasswordUser(@RequestBody @Validated ChangePasswordRequestDTO request) {
+        userService.changePasswordLoggedUser(request);
+        return ResponseEntity.noContent().build();
+    }
+
 
 }
