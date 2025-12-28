@@ -5,7 +5,6 @@ import br.com.felipedev.ecommerce.dto.jwt.TokenResponseDTO;
 import br.com.felipedev.ecommerce.dto.user.*;
 import br.com.felipedev.ecommerce.service.UserService;
 import br.com.felipedev.ecommerce.service.UserVerifierService;
-import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -63,6 +62,4 @@ public class UserController {
         userService.changePasswordLoggedUser(request);
         return ResponseEntity.noContent().build();
     }
-
-
 }

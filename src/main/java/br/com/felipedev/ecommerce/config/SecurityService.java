@@ -21,7 +21,7 @@ public class SecurityService {
         if (!(auth instanceof JwtAuthenticationToken jwtAuth)) {
             throw new AuthenticationCredentialsNotFoundException("Usuário não autenticado");
         }
-        return jwtAuth.getToken();
+         return jwtAuth.getToken();
     }
 
 }

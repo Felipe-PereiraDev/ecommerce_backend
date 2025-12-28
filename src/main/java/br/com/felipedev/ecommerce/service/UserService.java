@@ -9,10 +9,7 @@ import br.com.felipedev.ecommerce.enums.UserStatusEnum;
 import br.com.felipedev.ecommerce.exception.*;
 import br.com.felipedev.ecommerce.mapper.RoleMapper;
 import br.com.felipedev.ecommerce.mapper.UserMapper;
-import br.com.felipedev.ecommerce.model.PersonFisica;
-import br.com.felipedev.ecommerce.model.PersonJuridica;
-import br.com.felipedev.ecommerce.model.Role;
-import br.com.felipedev.ecommerce.model.User;
+import br.com.felipedev.ecommerce.model.*;
 import br.com.felipedev.ecommerce.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -139,7 +136,7 @@ public class UserService {
         return userRepository.findUsersWithExpiredPasswords(LocalDate.now().minusDays(90L));
     }
 
-    private User getAuthenticatedUser() {
+    public User getAuthenticatedUser() {
         Jwt jwt = securityService.getTokenAuthenticatedUser();
         String email = jwt.getSubject();
         return userRepository.findByEmail(email)

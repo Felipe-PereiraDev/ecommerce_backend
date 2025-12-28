@@ -4,7 +4,7 @@ public enum AddressType {
     BILLING("Cobrança"),
     DELIVERY("Entrega");
 
-    private String description;
+    private final String description;
 
     AddressType(String description) {
         this.description = description;
@@ -12,6 +12,15 @@ public enum AddressType {
 
     public String getDescription() {
         return description;
+    }
+
+    public static AddressType getAddressType(String addressType) {
+        for (AddressType value : AddressType.values()) {
+            if (value.description.equals(addressType)) {
+                return value;
+            }
+        }
+        return null;
     }
 
     @Override
