@@ -1,4 +1,4 @@
-package br.com.felipedev.ecommerce.config;
+package br.com.felipedev.ecommerce.config.security;
 
 import br.com.felipedev.ecommerce.model.User;
 import org.springframework.beans.factory.annotation.Autowired;

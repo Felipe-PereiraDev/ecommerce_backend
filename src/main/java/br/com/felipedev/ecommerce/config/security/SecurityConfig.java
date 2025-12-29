@@ -1,4 +1,4 @@
-package br.com.felipedev.ecommerce.config;
+package br.com.felipedev.ecommerce.config.security;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -55,6 +55,11 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.POST,"/categories/**").hasAnyRole("ADMIN", "SELLER")
                     .requestMatchers(HttpMethod.PUT,"/categories/**").hasAnyRole("ADMIN", "SELLER")
                     .requestMatchers(HttpMethod.DELETE,"/categories/**").hasAnyRole("ADMIN", "SELLER")
+
+                    .requestMatchers(HttpMethod.GET,"/person/**").hasAnyRole("ADMIN", "USER")
+                    .requestMatchers(HttpMethod.POST,"/person/**").hasAnyRole("ADMIN", "USER")
+                    .requestMatchers(HttpMethod.PUT,"/person/**").hasAnyRole("ADMIN", "USER")
+                    .requestMatchers(HttpMethod.DELETE,"/person/**").hasAnyRole("ADMIN", "USER")
 
                     .requestMatchers("/discount-coupon").hasAnyRole("ADMIN", "SELLER")
 
