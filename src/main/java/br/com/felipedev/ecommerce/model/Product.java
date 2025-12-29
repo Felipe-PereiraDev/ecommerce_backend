@@ -135,6 +135,9 @@ public class Product {
 
     }
 
+    public boolean isDisabled() {
+        return active == false;
+    }
     //    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
 //    List<ProductImage> images = new ArrayList<>();
 }
