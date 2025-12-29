@@ -35,6 +35,9 @@ public abstract class Person {
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses;
 
+    @OneToOne(mappedBy = "person", fetch = FetchType.LAZY)
+    private User user;
+
     public Person(String name, String phone) {
         this.name = name;
         this.phone = phone;

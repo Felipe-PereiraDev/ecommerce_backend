@@ -16,7 +16,10 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "users", uniqueConstraints = @UniqueConstraint(name = "email_uk", columnNames = {"email"}))
+@Table(name = "users", uniqueConstraints = {
+        @UniqueConstraint(name = "email_uk", columnNames = {"email"}),
+        @UniqueConstraint(name = "users_person_id_uk", columnNames = {"person_id"})
+})
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -41,8 +44,6 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserStatusEnum status;
 
-//    private Person person;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_roles",
@@ -65,7 +66,7 @@ public class User implements UserDetails {
     )
     private List<Role> roles = new ArrayList<>();
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "person_id", nullable = false,foreignKey = @ForeignKey(name = "person_fk", value = ConstraintMode.CONSTRAINT))
     private Person person;
 

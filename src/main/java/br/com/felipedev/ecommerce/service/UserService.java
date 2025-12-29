@@ -1,15 +1,16 @@
 package br.com.felipedev.ecommerce.service;
 
-import br.com.felipedev.ecommerce.config.JwtServiceConfig;
-import br.com.felipedev.ecommerce.config.SecurityService;
+import br.com.felipedev.ecommerce.config.security.UserContextService;
+import br.com.felipedev.ecommerce.config.security.JwtServiceConfig;
 import br.com.felipedev.ecommerce.dto.jwt.TokenResponseDTO;
 import br.com.felipedev.ecommerce.dto.user.*;
 import br.com.felipedev.ecommerce.enums.RoleType;
 import br.com.felipedev.ecommerce.enums.UserStatusEnum;
 import br.com.felipedev.ecommerce.exception.*;
-import br.com.felipedev.ecommerce.mapper.RoleMapper;
-import br.com.felipedev.ecommerce.mapper.UserMapper;
-import br.com.felipedev.ecommerce.model.*;
+import br.com.felipedev.ecommerce.model.PersonFisica;
+import br.com.felipedev.ecommerce.model.PersonJuridica;
+import br.com.felipedev.ecommerce.model.Role;
+import br.com.felipedev.ecommerce.model.User;
 import br.com.felipedev.ecommerce.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,6 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -46,7 +46,7 @@ public class UserService {
 
     private final UserVerifierService userVerifierService;
 
-    private final SecurityService securityService;
+    private final UserContextService userContextService;
 
 
     public TokenResponseDTO authentication(UserLogin userLogin ) {
@@ -119,7 +119,8 @@ public class UserService {
 
     @Transactional
     public void changePasswordLoggedUser(ChangePasswordRequestDTO request) {
-        User user = getAuthenticatedUser();
+        User user = userContextService.getAuthenticatedUser();
+
         if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {
             throw new BadRequestException("The current password is incorrect");
         }
@@ -134,13 +135,6 @@ public class UserService {
 
     public List<User> getUsersWithExpiredPasswords() {
         return userRepository.findUsersWithExpiredPasswords(LocalDate.now().minusDays(90L));
-    }
-
-    public User getAuthenticatedUser() {
-        Jwt jwt = securityService.getTokenAuthenticatedUser();
-        String email = jwt.getSubject();
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
 }

@@ -1,25 +1,29 @@
 package br.com.felipedev.ecommerce.service;
 
+import br.com.felipedev.ecommerce.config.security.UserContextService;
+import br.com.felipedev.ecommerce.dto.person.fisica.PersonFisicaResponseDTO;
 import br.com.felipedev.ecommerce.dto.user.UserPFRequestDTO;
 import br.com.felipedev.ecommerce.exception.DuplicateResourceException;
+import br.com.felipedev.ecommerce.exception.EntityNotFoundException;
 import br.com.felipedev.ecommerce.mapper.PersonFisicaMapper;
 import br.com.felipedev.ecommerce.model.PersonFisica;
 import br.com.felipedev.ecommerce.repository.PersonFisicaRepository;
 import br.com.felipedev.ecommerce.repository.PersonRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class PersonFisicaService {
 
-    @Autowired
-    private PersonFisicaRepository personFisicaRepository;
+    private final PersonFisicaRepository personFisicaRepository;
 
-    @Autowired
-    private PersonFisicaMapper personFisicaMapper;
+    private final PersonFisicaMapper personFisicaMapper;
 
-    @Autowired
-    private PersonRepository personRepository;
+    private final PersonRepository personRepository;
+
+    // mudar
+    private final UserContextService userContextService;
 
     public PersonFisica createPersonFisica(UserPFRequestDTO request) {
         existsByPhone(request.phone());
@@ -41,4 +45,10 @@ public class PersonFisicaService {
     }
 
 
+    public PersonFisicaResponseDTO findByCpf(String cpf) {
+        PersonFisica personFisica = personFisicaRepository.findByCpf(cpf)
+                .orElseThrow(() -> new EntityNotFoundException("Person not found"));
+        userContextService.ensureUserOwnsResource(personFisica.getUser().getId());
+        return personFisicaMapper.toResponse(personFisica);
+    }
 }

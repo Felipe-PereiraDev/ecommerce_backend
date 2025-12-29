@@ -1,40 +1,33 @@
 package br.com.felipedev.ecommerce.service;
 
-import br.com.felipedev.ecommerce.config.SecurityService;
+import br.com.felipedev.ecommerce.config.security.UserContextService;
+import br.com.felipedev.ecommerce.dto.person.juridica.PersonJuridicaResponseDTO;
 import br.com.felipedev.ecommerce.dto.user.UserPJRequestDTO;
-import br.com.felipedev.ecommerce.enums.RoleType;
 import br.com.felipedev.ecommerce.exception.DuplicateResourceException;
 import br.com.felipedev.ecommerce.exception.EntityNotFoundException;
 import br.com.felipedev.ecommerce.mapper.PersonJuridicaMapper;
-import br.com.felipedev.ecommerce.model.*;
+import br.com.felipedev.ecommerce.model.PersonJuridica;
 import br.com.felipedev.ecommerce.repository.PersonJuridicaRepository;
 import br.com.felipedev.ecommerce.repository.PersonRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.oauth2.jwt.Jwt;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
+@RequiredArgsConstructor
 public class PersonJuridicaService {
 
-    @Autowired
-    private PersonJuridicaRepository personJuridicaRepository;
+    private final PersonJuridicaRepository personJuridicaRepository;
 
-    @Autowired
-    private PersonRepository personRepository;
+    private final PersonRepository personRepository;
 
-    @Autowired
-    private PersonJuridicaMapper personJuridica;
+    private final PersonJuridicaMapper personJuridicaMapper;
 
-    @Autowired
-    private SecurityService securityService;
+    private final UserContextService userContextService;
 
     public PersonJuridica createPersonJuridica(UserPJRequestDTO request) {
         existsByPhone(request.phone());
         existsByCnpj(request.cnpj());
-        PersonJuridica newPersonJuridica = personJuridica.toEntity(request);
+        PersonJuridica newPersonJuridica = personJuridicaMapper.toEntity(request);
         personJuridicaRepository.save(newPersonJuridica);
         return newPersonJuridica;
     }
@@ -50,33 +43,16 @@ public class PersonJuridicaService {
         }
     }
 
-    public Long getIdAuthenticatedPersonJuridica() {
-        Jwt token = securityService.getTokenAuthenticatedUser();
-        List<String> roles = token.getClaimAsStringList("roles");
-        Long userId = token.getClaim("personId");
-
-        if (userId == null || roles == null) {
-            throw new AccessDeniedException("Authentication credentials are incomplete or invalid");
-        }
-
-        if (!roles.contains(RoleType.ROLE_SELLER.name())) {
-            throw new AccessDeniedException("You do not have permission to access this resource");
-        }
-        return userId;
-    }
-
-    public boolean hasSellerOwnership(Long expectedSellerId, Long actualSellerId) {
-        return expectedSellerId.equals(actualSellerId);
-    }
-
-    public boolean hasSellerOwnership(Long expectedSellerId, Brand brand, Category category) {
-        return expectedSellerId.equals(brand.getSeller().getId())
-                && expectedSellerId.equals(category.getSeller().getId());
-    }
-
     public PersonJuridica findById(Long sellerId) {
         return personJuridicaRepository
                 .findById(sellerId)
                 .orElseThrow(() -> new EntityNotFoundException("Seller with id %d not found".formatted(sellerId)));
+    }
+
+    public PersonJuridicaResponseDTO findByCnpj(String cnpj) {
+        PersonJuridica personJuridica = personJuridicaRepository.findByCnpj(cnpj)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        userContextService.ensureUserOwnsResource(personJuridica.getUser().getId());
+        return personJuridicaMapper.toResponse(personJuridica);
     }
 }
