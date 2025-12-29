@@ -1,9 +1,9 @@
 package br.com.felipedev.ecommerce.service;
 
+import br.com.felipedev.ecommerce.config.security.UserContextService;
 import br.com.felipedev.ecommerce.dto.product.ProductRequestDTO;
 import br.com.felipedev.ecommerce.dto.product.ProductResponseDTO;
 import br.com.felipedev.ecommerce.dto.product.ProductUpdateDTO;
-import br.com.felipedev.ecommerce.exception.DescriptionExistsException;
 import br.com.felipedev.ecommerce.exception.DuplicateResourceException;
 import br.com.felipedev.ecommerce.exception.EntityNotFoundException;
 import br.com.felipedev.ecommerce.exception.UnprocessableEntityException;
@@ -14,42 +14,30 @@ import br.com.felipedev.ecommerce.model.PersonJuridica;
 import br.com.felipedev.ecommerce.model.Product;
 import br.com.felipedev.ecommerce.repository.ProductRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.access.AccessDeniedException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
-
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
-    private BrandService brandService;
-
-    @Autowired
-    private CategoryService categoryService;
-
-    @Autowired
-    private ProductMapper productMapper;
-
-    @Autowired
-    private PersonJuridicaService personJuridicaService;
+    private final ProductRepository productRepository;
+    private final BrandService brandService;
+    private final CategoryService categoryService;
+    private final ProductMapper productMapper;
+    private final PersonJuridicaService personJuridicaService;
+    private final UserContextService userContextService;
 
     @Transactional
     public ProductResponseDTO createProduct(ProductRequestDTO request) {
-        Long sellerId = personJuridicaService.getIdAuthenticatedPersonJuridica();
+        Long sellerId = userContextService.getAuthenticatedSellerId();
         PersonJuridica seller = personJuridicaService.findById(sellerId);
 
         var category = categoryService.findById(request.categoryId());
         var brand = brandService.findById(request.brandId());
 
-        if (!personJuridicaService.hasSellerOwnership(sellerId, brand, category)) {
-            throw new AccessDeniedException("You do not have permission to access this resource");
-        }
+        userContextService.ensureSellerOwnsBrandAndCategory(sellerId, brand.getSeller().getId(), category.getSeller().getId());
 
         if (productRepository.existsByNameAndSellerId(request.name(), sellerId)){
             throw new DuplicateResourceException("The product with name %s already exists".formatted(request.name()));
@@ -68,20 +56,22 @@ public class ProductService {
 
     @Transactional
     public ProductResponseDTO updateProduct(Long id, ProductUpdateDTO request) {
-        Long selleId = personJuridicaService.getIdAuthenticatedPersonJuridica();
         Product product = findById(id);
-        verifySellerOwnership(selleId, product.getSeller().getId());
+        // verifica se o produto pertence ao seller
+        userContextService.ensureSellerOwnsResource(product.getSeller().getId());
 
         Brand brand = null;
         Category category = null;
 
         if (request.brandId() != null && !request.brandId().equals(product.getBrand().getId())) {
             brand = brandService.findById(request.brandId());
-            verifySellerOwnership(selleId, brand.getSeller().getId());
+            // verifica se a nova marca pertence ao seller autenticado
+            userContextService.ensureSellerOwnsResource(brand.getSeller().getId());
         }
         if (request.categoryId() != null && !request.categoryId().equals(product.getCategory().getId())) {
             category = categoryService.findById(request.categoryId());
-             verifySellerOwnership(selleId, category.getSeller().getId());
+            // verifica se a categoria marca pertence ao seller autenticado
+            userContextService.ensureSellerOwnsResource(category.getSeller().getId());
         }
 
         product.update(request, brand, category);
@@ -95,28 +85,21 @@ public class ProductService {
     }
 
     public void deleteById(Long id) {
-        Long sellerId = personJuridicaService.getIdAuthenticatedPersonJuridica();
         Product product = findById(id);
+        userContextService.ensureSellerOwnsResource(product.getSeller().getId());
 
-        verifySellerOwnership(sellerId, product.getSeller().getId());
         productRepository.delete(product);
         productRepository.deactivateProduct(id);
     }
 
     public void deactivateById(Long id) {
-        Long seller = personJuridicaService.getIdAuthenticatedPersonJuridica();
         Product product = findById(id);
+        userContextService.ensureSellerOwnsResource(product.getSeller().getId());
 
-        verifySellerOwnership(seller, product.getSeller().getId());
-        if (product.getActive().equals(false)) {
+        if (product.isDisabled()) {
             throw new UnprocessableEntityException("Product with id %d is already deactivated".formatted(id));
         }
         productRepository.deactivateProduct(id);
     }
 
-    private void verifySellerOwnership(Long expectedSellerId, Long actualSellerId) {
-        if (!personJuridicaService.hasSellerOwnership(expectedSellerId, actualSellerId)) {
-            throw new AccessDeniedException("You do not have permission to access this resource");
-        }
-    }
 }

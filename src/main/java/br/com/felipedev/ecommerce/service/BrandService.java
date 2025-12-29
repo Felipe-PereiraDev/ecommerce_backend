@@ -1,5 +1,6 @@
 package br.com.felipedev.ecommerce.service;
 
+import br.com.felipedev.ecommerce.config.security.UserContextService;
 import br.com.felipedev.ecommerce.dto.brand.BrandRequestDTO;
 import br.com.felipedev.ecommerce.dto.brand.BrandResponseDTO;
 import br.com.felipedev.ecommerce.exception.DescriptionExistsException;
@@ -9,23 +10,21 @@ import br.com.felipedev.ecommerce.mapper.BrandMapper;
 import br.com.felipedev.ecommerce.model.Brand;
 import br.com.felipedev.ecommerce.model.PersonJuridica;
 import br.com.felipedev.ecommerce.repository.BrandRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class BrandService {
-    @Autowired
-    private BrandRepository brandRepository;
-    @Autowired
-    private BrandMapper brandMapper;
-    @Autowired
-    private PersonJuridicaService personJuridicaService;
+    private final BrandRepository brandRepository;
+    private final BrandMapper brandMapper;
+    private final PersonJuridicaService personJuridicaService;
+    private final UserContextService userContextService;
 
     public BrandResponseDTO create(BrandRequestDTO request) {
-        Long sellerId = personJuridicaService.getIdAuthenticatedPersonJuridica();
+        Long sellerId = userContextService.getAuthenticatedSellerId();
         PersonJuridica seller = personJuridicaService.findById(sellerId);
 
         if (brandRepository.existsByDescriptionAndSellerId(request.description(), sellerId)) {
@@ -48,14 +47,12 @@ public class BrandService {
     }
 
     public BrandResponseDTO updateDescription(Long id, BrandRequestDTO request) {
-        Long sellerId = personJuridicaService.getIdAuthenticatedPersonJuridica();
+
         Brand brand = findById(id);
 
-        if (!personJuridicaService.hasSellerOwnership(sellerId, brand.getSeller().getId())) {
-            throw new AccessDeniedException("You do not have permission to access this resource");
-        }
+        userContextService.ensureSellerOwnsResource(brand.getSeller().getId());
 
-        if (brandRepository.existsByDescriptionAndSellerId(request.description(), sellerId)) {
+        if (brandRepository.existsByDescriptionAndSellerId(request.description(), brand.getSeller().getId())) {
             throw new DescriptionExistsException("The brand %s already exists".formatted(request.description()));
         }
 
@@ -66,11 +63,9 @@ public class BrandService {
 
 
     public void deleteById(Long id) {
-        Long sellerId = personJuridicaService.getIdAuthenticatedPersonJuridica();
         Brand brand = findById(id);
-        if (!personJuridicaService.hasSellerOwnership(sellerId, brand.getSeller().getId())) {
-            throw new AccessDeniedException("You do not have permission to access this resource");
-        }
+
+        userContextService.ensureSellerOwnsResource(brand.getSeller().getId());
 
         if (brandRepository.hasProductsAssociated(id)) {
             throw new UnprocessableEntityException("Cannot delete the brand with ID %d".formatted(id));

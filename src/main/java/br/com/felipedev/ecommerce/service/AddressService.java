@@ -1,5 +1,6 @@
 package br.com.felipedev.ecommerce.service;
 
+import br.com.felipedev.ecommerce.config.security.UserContextService;
 import br.com.felipedev.ecommerce.dto.address.AddressRequestDTO;
 import br.com.felipedev.ecommerce.dto.address.AddressResponseDTO;
 import br.com.felipedev.ecommerce.dto.address.AddressUpdateDTO;
@@ -28,16 +29,16 @@ public class AddressService {
 
     private final ViaCepClient viaCepClient;
 
-    private final UserService userService;
-
     private final AddressMapper addressMapper;
 
     private final AddressRepository addressRepository;
 
+    private final UserContextService userContextService;
+
     public AddressResponseDTO create(AddressRequestDTO request) {
         ViaCepResponse viaCepResponse = getAddressByZipCode(request.zipCode());
-        User authenticatedUser = userService.getAuthenticatedUser();
-        Person person = authenticatedUser.getPerson();
+        Person person = userContextService.getAuthenticatedPerson();
+
         AddressType addressType = AddressType.getAddressType(request.addressType());
         if (addressType == null) {
             throw new BadRequestException("tipo inválido, disponíveis:" + Arrays.toString(AddressType.values()));
@@ -56,7 +57,7 @@ public class AddressService {
 
     public AddressResponseDTO updateAddress(Long id, AddressUpdateDTO request) {
         Address address = findById(id);
-        Person person = userService.getAuthenticatedUser().getPerson();
+        Person person = userContextService.getAuthenticatedPerson();
 
         if (!address.getPerson().getId().equals(person.getId())) {
             throw new AccessDeniedException("You do not have permission to access this resource");
@@ -70,7 +71,7 @@ public class AddressService {
     }
 
     public List<AddressResponseDTO> findAllAddressByPerson() {
-        Person person = userService.getAuthenticatedUser().getPerson();
+        Person person = userContextService.getAuthenticatedPerson();
         return addressMapper.toResponseList(person.getAddresses());
     }
 
