@@ -6,61 +6,36 @@ import br.com.felipedev.ecommerce.model.Brand;
 import br.com.felipedev.ecommerce.model.Category;
 import br.com.felipedev.ecommerce.model.PersonJuridica;
 import br.com.felipedev.ecommerce.model.Product;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Component
-public class ProductMapper {
-    @Autowired
-    private BrandMapper brandMapper;
+@Mapper(
+        componentModel = "spring",
+        uses = {
+                BrandMapper.class,
+                CategoryMapper.class
+        }
+)
+public interface ProductMapper {
 
-    @Autowired
-    private CategoryMapper categoryMapper;
+    ProductResponseDTO toResponseDTO(Product product);
 
-    public ProductResponseDTO toResponseDTO(Product product) {
-        return new ProductResponseDTO(
-                product.getId(),
-                product.getName(),
-                product.getPrice(),
-                product.getUnitType(),
-                product.getDescription(),
-                product.getWeight(),
-                product.getWidth(),
-                product.getHeight(),
-                product.getDepth(),
-                product.getStockQuantity(),
-                product.getStockAlertQuantity(),
-                product.getYoutubeLink(),
-                brandMapper.toResponseDTO(product.getBrand()),
-                categoryMapper.toResponseDTO(product.getCategory())
-        );
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "stockAlertEnabled", ignore = true)
+    @Mapping(target = "clickCount", ignore = true)
+    @Mapping(target = "active", ignore = true)
 
-    public Product toEntity(ProductRequestDTO request, PersonJuridica seller, Brand brand, Category category) {
-        return new Product(
-                brand,
-                category,
-                request.depth(),
-                request.description(),
-                request.height(),
-                request.name(),
-                request.price(),
-                request.stockAlertQuantity(),
-                request.stockQuantity(),
-                request.unitType(),
-                request.weight(),
-                request.width(),
-                request.youtubeLink(),
-                seller
-        );
-    }
+    @Mapping(source = "request.name", target = "name")
+    @Mapping(source = "request.description", target = "description")
 
-    public List<ProductResponseDTO> toResponseDTOList(List<Product> productList) {
-        return productList.stream()
-                .map(this::toResponseDTO)
-                .toList();
-    }
+    @Mapping(source = "seller", target = "seller")
+    @Mapping(source = "brand", target = "brand")
+    @Mapping(source = "category", target = "category")
+
+    Product toEntity(ProductRequestDTO request, PersonJuridica seller, Brand brand, Category category);
+
+    List<ProductResponseDTO> toResponseDTOList(List<Product> productList);
 
 }

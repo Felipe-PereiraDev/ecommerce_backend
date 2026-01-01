@@ -2,52 +2,36 @@ package br.com.felipedev.ecommerce.mapper;
 
 import br.com.felipedev.ecommerce.dto.address.AddressRequestDTO;
 import br.com.felipedev.ecommerce.dto.address.AddressResponseDTO;
-import br.com.felipedev.ecommerce.dto.address.AddressUpdateDTO;
 import br.com.felipedev.ecommerce.dto.viacep.ViaCepResponse;
 import br.com.felipedev.ecommerce.enums.AddressType;
 import br.com.felipedev.ecommerce.model.Address;
 import br.com.felipedev.ecommerce.model.Person;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Component
-public class AddressMapper {
+@Mapper(componentModel = "spring")
+public interface AddressMapper {
 
-    public Address toEntity(ViaCepResponse viaCepResponse, AddressRequestDTO requestDTO, AddressType addressType, Person person) {
-        return Address.builder()
-                .zipCode(viaCepResponse.cep())
-                .street(viaCepResponse.logradouro())
-                .number(requestDTO.number())
-                .complement(requestDTO.complement())
-                .neighborhood(viaCepResponse.bairro())
-                .state(viaCepResponse.estado())
-                .city(viaCepResponse.localidade())
-                .person(person)
-                .type(addressType)
-                .build();
-    }
+    @Mapping(target = "id", ignore = true)
 
-    public AddressResponseDTO toResponse(Address address) {
-        return new AddressResponseDTO(
-                address.getId(),
-                address.getPerson().getId(),
-                address.zipCode,
-                address.street,
-                address.number,
-                address.complement,
-                address.neighborhood,
-                address.state,
-                address.city,
-                address.type.getDescription()
-        );
-    }
+    @Mapping(source = "viaCepResponse.cep", target = "zipCode")
+    @Mapping(source = "viaCepResponse.logradouro", target = "street")
+    @Mapping(source = "viaCepResponse.bairro", target = "neighborhood")
+    @Mapping(source = "viaCepResponse.estado", target = "state")
+    @Mapping(source = "viaCepResponse.localidade", target = "city")
+    @Mapping(source = "requestDTO.number", target = "number")
+    @Mapping(source = "requestDTO.complement", target = "complement")
+    @Mapping(source = "type", target = "type")
+    @Mapping(source = "person", target = "person")
+    Address toEntity(ViaCepResponse viaCepResponse, AddressRequestDTO requestDTO, AddressType type, Person person);
 
-    public List<AddressResponseDTO> toResponseList(List<Address> addressList) {
-        return addressList.stream().map(
-                this::toResponse
-        ).toList();
-    }
+    @Mapping(source = "person.id", target = "personId")
+    @Mapping(source = "type.description", target = "addressType")
+    AddressResponseDTO toResponse(Address address);
+
+    List<AddressResponseDTO> toResponseList(List<Address> addressList);
 
 
 }

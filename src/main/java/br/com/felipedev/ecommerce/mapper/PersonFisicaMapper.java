@@ -3,32 +3,21 @@ package br.com.felipedev.ecommerce.mapper;
 import br.com.felipedev.ecommerce.dto.person.fisica.PersonFisicaResponseDTO;
 import br.com.felipedev.ecommerce.dto.user.UserPFRequestDTO;
 import br.com.felipedev.ecommerce.model.PersonFisica;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Component
-@RequiredArgsConstructor
-public class PersonFisicaMapper {
-    private final AddressMapper addressMapper;
+@Mapper(
+        componentModel = "spring",
+        uses = {
+                AddressMapper.class
+        }
+)
+public interface PersonFisicaMapper {
 
-    public PersonFisica toEntity(UserPFRequestDTO request) {
-        return new PersonFisica(
-                request.name(),
-                request.phone(),
-                request.cpf(),
-                request.dateOfBirth()
-        );
-    }
+    @Mapping(target = "id", ignore = true)
+    PersonFisica toEntity(UserPFRequestDTO request);
 
 
-    public PersonFisicaResponseDTO toResponse(PersonFisica personFisica) {
-        return new PersonFisicaResponseDTO(
-                personFisica.getCpf(),
-                personFisica.getName(),
-                personFisica.getUser().getEmail(),
-                personFisica.getPhone(),
-                personFisica.getDateOfBirth(),
-                addressMapper.toResponseList(personFisica.getAddresses())
-        );
-    }
+    @Mapping(source = "user.email", target = "email")
+    PersonFisicaResponseDTO toResponse(PersonFisica personFisica);
 }

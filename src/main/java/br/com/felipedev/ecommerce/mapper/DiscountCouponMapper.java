@@ -1,28 +1,22 @@
 package br.com.felipedev.ecommerce.mapper;
 
 
+import br.com.felipedev.ecommerce.dto.discountcoupon.DiscountCouponRequestDTO;
 import br.com.felipedev.ecommerce.dto.discountcoupon.DiscountCouponResponseDTO;
 import br.com.felipedev.ecommerce.model.DiscountCoupon;
-import org.springframework.stereotype.Component;
+import br.com.felipedev.ecommerce.model.PersonJuridica;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Component
-public class DiscountCouponMapper {
-    public DiscountCouponResponseDTO toResponseDTO(DiscountCoupon discountCoupon) {
-        return new DiscountCouponResponseDTO(
-                discountCoupon.getId(),
-                discountCoupon.getCode(),
-                discountCoupon.getDiscountAmount(),
-                discountCoupon.getPercentage(),
-                discountCoupon.getDueDate()
-        );
-    }
+@Mapper(componentModel = "spring")
+public interface DiscountCouponMapper {
 
-    public List<DiscountCouponResponseDTO> toResponseDTOList(List<DiscountCoupon> productList) {
-        return productList.stream()
-                .map(this::toResponseDTO)
-                .toList();
-    }
+    @Mapping(target = "id", ignore = true)
+    DiscountCoupon toEntity(PersonJuridica seller, DiscountCouponRequestDTO requestDTO);
 
+    DiscountCouponResponseDTO toResponseDTO(DiscountCoupon discountCoupon);
+
+    List<DiscountCouponResponseDTO> toResponseDTOList(List<DiscountCoupon> productList);
 }

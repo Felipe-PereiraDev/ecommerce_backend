@@ -2,20 +2,15 @@ package br.com.felipedev.ecommerce.mapper;
 
 import br.com.felipedev.ecommerce.dto.role.RoleResponseDTO;
 import br.com.felipedev.ecommerce.model.Role;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Component
-public class RoleMapper {
+@Mapper(componentModel = "spring")
+public interface RoleMapper {
 
-    public RoleResponseDTO toResponseDTO(Role role) {
-        return new RoleResponseDTO(role.getId(), role.getRole().name());
-    }
+    RoleResponseDTO toResponseDTO(Role role);
 
-    public List<RoleResponseDTO> toResponseDTOList(List<Role> role) {
-        return role.stream()
-                .map(this::toResponseDTO)
-                .toList();
-    }
+    List<RoleResponseDTO> toResponseDTOList(List<Role> role);
 }

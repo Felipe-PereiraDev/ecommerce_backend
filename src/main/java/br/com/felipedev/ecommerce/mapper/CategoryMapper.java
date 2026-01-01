@@ -2,20 +2,16 @@ package br.com.felipedev.ecommerce.mapper;
 
 import br.com.felipedev.ecommerce.dto.category.CategoryResponseDTO;
 import br.com.felipedev.ecommerce.model.Category;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Component
-public class CategoryMapper {
+@Mapper(componentModel = "spring")
+public interface CategoryMapper {
 
-    public CategoryResponseDTO toResponseDTO(Category category) {
-        return new CategoryResponseDTO(category.getId(), category.getDescription(), category.getSeller().getId());
-    }
+    @Mapping(source = "seller.id", target = "sellerId")
+    CategoryResponseDTO toResponseDTO(Category category);
 
-    public List<CategoryResponseDTO> toResponseDTOList(List<Category> categoryList) {
-        return categoryList.stream()
-                .map(this::toResponseDTO)
-                .toList();
-    }
+    List<CategoryResponseDTO> toResponseDTOList(List<Category> categoryList);
 }

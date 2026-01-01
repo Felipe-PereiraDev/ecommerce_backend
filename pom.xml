@@ -18,7 +18,8 @@
 		<spring-cloud.version>2025.0.0</spring-cloud.version>
         <testcontainers.version>2.0.2</testcontainers.version>
         <flyway.version>10.9.1</flyway.version>
-	</properties>
+        <org.mapstruct.version>1.6.3</org.mapstruct.version>
+    </properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -56,8 +57,11 @@
             <artifactId>thumbnailator</artifactId>
             <version>0.4.20</version>
         </dependency>
-
-
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version>
+        </dependency>
         <dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
@@ -136,6 +140,11 @@
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
 						</path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${org.mapstruct.version}</version>
+                        </path>
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
