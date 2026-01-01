@@ -17,7 +17,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@SuperBuilder
 @PrimaryKeyJoinColumn(name = "id", foreignKey = @ForeignKey(name = "person_juridica_fk", value = ConstraintMode.CONSTRAINT))
 //@DiscriminatorValue("JURIDICA")
 public class PersonJuridica extends Person{

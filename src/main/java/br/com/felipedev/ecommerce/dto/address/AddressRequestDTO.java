@@ -1,7 +1,5 @@
 package br.com.felipedev.ecommerce.dto.address;
 
-import br.com.felipedev.ecommerce.enums.AddressType;
-
 public record AddressRequestDTO(
         String zipCode,
         String street,

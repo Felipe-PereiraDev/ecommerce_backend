@@ -10,10 +10,10 @@ public record PersonJuridicaResponseDTO(
         String phone,
         String cnpj,
         String category,
-        String corporate_name,
-        String municipal_registration,
-        String state_registration,
-        String trade_name,
+        String corporateName,
+        String municipalRegistration,
+        String stateRegistration,
+        String tradeName,
         List<AddressResponseDTO> addresses
 ) {
 }

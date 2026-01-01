@@ -18,7 +18,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
 @Inheritance(strategy = InheritanceType.JOINED)
 //@DiscriminatorColumn(name = "person_type")
 public abstract class Person {

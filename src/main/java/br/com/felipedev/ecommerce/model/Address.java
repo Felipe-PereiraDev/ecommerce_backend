@@ -12,38 +12,37 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long id;
+    private long id;
     @Column(nullable = false)
-    public String zipCode;
+    private String zipCode;
 
     @Column(nullable = false)
-    public String street;
+    private String street;
 
     @Column(nullable = false)
-    public String number;
+    private String number;
 
-    public String complement;
-
-    @Column(nullable = false)
-    public String neighborhood;
+    private String complement;
 
     @Column(nullable = false)
-    public String state;
+    private String neighborhood;
 
     @Column(nullable = false)
-    public String city;
+    private String state;
+
+    @Column(nullable = false)
+    private String city;
 
     @ManyToOne
     @JoinColumn(name = "person_id", nullable = false, foreignKey = @ForeignKey(name = "person_fk"))
-    public Person person;
+    private Person person;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    public AddressType type;
+    private AddressType type;
 
     public void update(AddressUpdateDTO addressDTO, ViaCepResponse viaCepResponse) {
         if (addressDTO.number() != null && !addressDTO.number().isBlank()) {

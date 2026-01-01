@@ -1,5 +1,6 @@
 package br.com.felipedev.ecommerce.service;
 
+import br.com.felipedev.ecommerce.config.security.UserContextService;
 import br.com.felipedev.ecommerce.dto.discountcoupon.DiscountCouponRequestDTO;
 import br.com.felipedev.ecommerce.dto.discountcoupon.DiscountCouponResponseDTO;
 import br.com.felipedev.ecommerce.dto.discountcoupon.DiscountCouponUpdateDTO;
@@ -7,24 +8,31 @@ import br.com.felipedev.ecommerce.exception.DescriptionExistsException;
 import br.com.felipedev.ecommerce.exception.EntityNotFoundException;
 import br.com.felipedev.ecommerce.mapper.DiscountCouponMapper;
 import br.com.felipedev.ecommerce.model.DiscountCoupon;
+import br.com.felipedev.ecommerce.model.PersonJuridica;
+import br.com.felipedev.ecommerce.model.User;
 import br.com.felipedev.ecommerce.repository.DiscountCouponRepository;
 import br.com.felipedev.ecommerce.utils.Utils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class DiscountCouponService {
 
-    @Autowired
-    private DiscountCouponRepository couponRepository;
+    private final DiscountCouponRepository couponRepository;
 
-    @Autowired
-    private DiscountCouponMapper couponMapper;
+    private final DiscountCouponMapper couponMapper;
+
+    private final UserContextService userContextService;
+
 
     public DiscountCouponResponseDTO createDiscountCoupon(DiscountCouponRequestDTO request) {
+        userContextService.ensureSellerOwnsResource(request.sellerId());
+
         request = new DiscountCouponRequestDTO(
+                request.sellerId(),
                 Utils.formatCode(request.code()),
                 request.discountAmount(),
                 request.percentage(),
@@ -33,12 +41,11 @@ public class DiscountCouponService {
         if (couponRepository.existsByCode(request.code())) {
             throw new DescriptionExistsException("The discount coupon code %s already exists".formatted(request.code()));
         }
-        DiscountCoupon newDiscountCoupon = new DiscountCoupon(
-                request.percentage(),
-                request.dueDate(),
-                request.discountAmount(),
-                request.code()
-        );
+
+        PersonJuridica authenticatedSeller = (PersonJuridica) userContextService.getAuthenticatedPerson();
+
+        DiscountCoupon newDiscountCoupon = couponMapper.toEntity(authenticatedSeller, request);
+
         couponRepository.save(newDiscountCoupon);
         return couponMapper.toResponseDTO(newDiscountCoupon);
     }
@@ -50,6 +57,8 @@ public class DiscountCouponService {
 
     public DiscountCouponResponseDTO updateDiscountCoupon(Long id, DiscountCouponUpdateDTO request) {
         DiscountCoupon discountCoupon = findById(id);
+        userContextService.ensureSellerOwnsResource(discountCoupon.getSeller().getId());
+
         if (couponRepository.existsByCode(request.code())) {
             throw new DescriptionExistsException("The discount coupon code %s already exists".formatted(request.code()));
         }
@@ -65,10 +74,9 @@ public class DiscountCouponService {
     }
 
     public void deleteById(Long id) {
-        if (!couponRepository.existsById(id)) {
-            throw new EntityNotFoundException("The coupon discount with id %d not exists".formatted(id));
-        }
-        couponRepository.deleteById(id);
+        DiscountCoupon discountCoupon = findById(id);
+        userContextService.ensureSellerOwnsResource(discountCoupon.getSeller().getId());
+        couponRepository.delete(discountCoupon);
     }
 
     public DiscountCouponResponseDTO findByCode(String code) {

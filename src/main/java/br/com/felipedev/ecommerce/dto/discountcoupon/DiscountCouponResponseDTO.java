@@ -1,5 +1,6 @@
 package br.com.felipedev.ecommerce.dto.discountcoupon;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import org.hibernate.validator.constraints.Length;
@@ -12,6 +13,7 @@ public record DiscountCouponResponseDTO(
         String code,
         BigDecimal discountAmount,
         BigDecimal percentage,
-        LocalDateTime dateTime
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSS")
+        LocalDateTime dueDate
 ) {
 }
